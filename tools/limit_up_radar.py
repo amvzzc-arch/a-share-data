@@ -633,7 +633,7 @@ def collect_first_boards(date):
 def cmd_rank(push_too=True, date=None):
     date = date or last_trade_date()
     cand, drop, stat = collect_first_boards(date)
-    L = ["📋 一进二候选排序（%s 首板·三层漏斗）" % date[4:6] + "-" + date[6:8],
+    L = ["📋 一进二候选排序（%s-%s 首板·三层漏斗）" % (date[4:6], date[6:8]),
          "涨停%d 炸板率%.0f%% ｜ 主板首板合格%d只" % (stat["zt"], stat["zbr"], len(cand))]
     if cand:
         L.append("【✅可打·按综合分，前5】")
