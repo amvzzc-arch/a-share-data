@@ -2,6 +2,8 @@
 
 所有"窗口"（豆包对话）彼此隔离，但都通过**同一个 GitHub 仓库 + 飞书复盘中心**共享状态。本文件是联动的"接口约定"。
 
+- **飞书复盘中心（手机可读）**：https://my.feishu.cn/file/YvY3bywokoMdPxxs9MZchh0EnBc （每日复盘顶部最新，由复盘窗口用 lark-cli markdown +patch/+overwrite 更新）
+
 ## 一、三个窗口的分工
 
 | 窗口 | 角色 | 读 | 写 |
