@@ -137,6 +137,123 @@ def tencent_quotes(codes):
     return out
 
 
+# ==================== 轨4：新主线首次共振·中军信号卡（10:00-11:00，v2.5） ====================
+_BOARD_MAP = None
+_BOARD_MAP_TS = 0
+GUI4_WINDOW = (10 * 60, 11 * 60)   # 10:00-11:00，只做第一次共振
+GUI4_LOT_MAX = 3000.0             # 轨4 1手红线≤3000
+
+
+def get_board_map():
+    """行业板块名→BK代码，缓存30分钟。"""
+    global _BOARD_MAP, _BOARD_MAP_TS
+    if _BOARD_MAP and time.time() - _BOARD_MAP_TS < 1800:
+        return _BOARD_MAP
+    m = {}
+    try:
+        url = ("https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=200&po=1&np=1"
+               "&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f12,f14")
+        d = json.loads(http_get(url))
+        diff = (d.get("data") or {}).get("diff") or []
+        if isinstance(diff, dict):
+            diff = list(diff.values())
+        for x in diff:
+            m[x.get("f14")] = x.get("f12")
+    except Exception as e:
+        log("板块映射失败:", e)
+    if m:
+        _BOARD_MAP, _BOARD_MAP_TS = m, time.time()
+    return _BOARD_MAP or {}
+
+
+def board_zhongjun(bk, exclude):
+    """板块成分里找未涨停中军：主板、+1~5%、成交≥1亿、现价>今开、价≤100。按成交额排序取前3。"""
+    if not bk:
+        return []
+    url = ("https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=300&po=1&np=1&fltt=2&invt=2"
+           "&fid=f6&fs=b:%s&fields=f2,f3,f6,f12,f14,f17" % bk)
+    try:
+        d = json.loads(http_get(url))
+        diff = (d.get("data") or {}).get("diff") or []
+        if isinstance(diff, dict):
+            diff = list(diff.values())
+    except Exception as e:
+        log("板块成分失败(%s):" % bk, e)
+        return []
+    out = []
+    for x in diff:
+        c = x.get("f12")
+        if not c or c in exclude or not is_main(c) or is_st(x.get("f14", "")):
+            continue
+        pct, price, amt, op = x.get("f3") or 0, x.get("f2") or 0, x.get("f6") or 0, x.get("f17") or 0
+        if price <= 0 or price > PRICE_MAX:
+            continue
+        if not (1.0 <= pct <= 5.0):       # 轨4中军+1~5%，>5%不追
+            continue
+        if amt < 1e8:                      # 成交≥1亿
+            continue
+        if op > 0 and price < op:          # 现价低于今开=弱势，排除
+            continue
+        out.append((x.get("f14"), c, price, pct, amt))
+    out.sort(key=lambda z: -z[4])
+    return out[:3]
+
+
+def sh_pct():
+    """上证实时涨跌幅(%)。"""
+    try:
+        f = http_get("https://qt.gtimg.cn/q=sh000001", gbk=True).split("~")
+        return (float(f[3]) - float(f[4])) / float(f[4]) * 100
+    except Exception:
+        return 0.0
+
+
+def gui4_window_open():
+    hm = datetime.datetime.now().hour * 60 + datetime.datetime.now().minute
+    return GUI4_WINDOW[0] <= hm <= GUI4_WINDOW[1]
+
+
+def gui4_signal(hy, n_hy, stocks, zb_hy, zbr, leader):
+    """板块首次≥3涨停（10:00-11:00）时，按轨4七条件硬核对并推信号卡。每板块每天一次。"""
+    zb_in = sum(1 for x in zb_hy if x.get("hybk") == hy)
+    sh = sh_pct()
+    # 硬闸门：板块内0炸板 / 全市场炸板率<40% / 上证跌<1% / 龙头封死
+    gate_ok = (zb_in == 0 and zbr < 40 and sh > -1 and (leader.get("fund") or 0) > 0)
+    reason = []
+    if zb_in != 0:
+        reason.append("板块内%d只炸板" % zb_in)
+    if zbr >= 40:
+        reason.append("全市场炸板率%.0f%%≥40%%" % zbr)
+    if sh <= -1:
+        reason.append("上证%.1f%%崩盘" % sh)
+    if not ((leader.get("fund") or 0) > 0):
+        reason.append("龙头未封死")
+    bk = get_board_map().get(hy)
+    zj = board_zhongjun(bk, {x["c"] for x in stocks}) if gate_ok else []
+    if not gate_ok:
+        # 不满足硬闸门静默（避免窗口打开瞬间多板块刷屏），仅本地留痕
+        log("轨4关闭·%s：%s" % (hy, "、".join(reason) or "无"))
+        return
+    if not zj:
+        push("🟡轨4共振·%s（%d涨停/0炸板）但无合格中军" % (hy, n_hy),
+             "板块达标，但没有主板+1~5%、放量、站上今开、价≤100的中军（多已超5%/非主板）→不追")
+        return
+    lines = []
+    for nm, c, p, pct, amt in zj:
+        stop = round(p * 0.97, 2)          # 破分时均线/-3%量化止损
+        lot = round(p * 100)
+        risk = round((p - stop) * 100)
+        tag = "✅" if lot <= GUI4_LOT_MAX and risk <= 250 else "⚠️1手超线"
+        lines.append("%s%s(%s) 现%.2f(+%.1f%%) 买%.2f-%.2f 100股%d元 止损%.2f 风险%d元 %s"
+                     % (tag, nm, c, p, pct, round(p * 0.995, 2), round(p * 1.005, 2),
+                        lot, stop, risk, "" if lot <= GUI4_LOT_MAX else "轨4放弃"))
+    push("🟢轨4共振·%s（%d只涨停/板块内0炸板/炸板率%.0f%%）" % (hy, n_hy, zbr),
+         "龙头：%s(%s)%s板封单%.1f亿 上证%.1f%%\n"
+         % (leader["n"], leader["c"], leader.get("lbc", 1), leader.get("fund", 0) / 1e8, sh)
+         + "\n".join(lines)
+         + "\n窗口10:00-11:00｜先人工确认『新题材首日/发酵1-2天』(老热点反抽不做)｜>5%不追、破分时均线/-3%走、1手≤3000、风险≤250")
+
+
 def today_str():
     return datetime.datetime.now().strftime("%Y%m%d")
 
@@ -413,6 +530,7 @@ class Radar:
         self.height = 0
         self.watch_level = {}
         self.sent_sentiment = set()
+        self.gui4_sent = set()
         self.inited = False
 
     def reset_if_new_day(self):
@@ -446,6 +564,15 @@ class Radar:
                 push(head, "龙头：%s(%s) %s连板，封单%.1f亿\n梯队：%s"
                      % (leader["n"], leader["c"], leader.get("lbc", 1),
                         leader.get("fund", 0) / 1e8, names))
+
+        # ---- 1.5) 轨4首次共振·中军信号卡（10:00-11:00，v2.5，每板块一次） ----
+        if not baseline and gui4_window_open():
+            for hy2, n2 in cnt.items():
+                if n2 >= BOARD_LIMIT and hy2 not in self.gui4_sent:
+                    stocks2 = [x for x in zt if x.get("hybk") == hy2]
+                    leader2 = max(stocks2, key=lambda x: x.get("lbc", 1))
+                    self.gui4_sent.add(hy2)
+                    gui4_signal(hy2, n2, stocks2, zb, zbr, leader2)
 
         # ---- 2) 新连板 + 3) 主板新首板 ----
         cur = {x["c"]: x for x in zt}
