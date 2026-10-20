@@ -12,7 +12,7 @@ A股涨停雷达 · 三轨短线版（零依赖，只用 Python 标准库）
 运行：python3 limit_up_radar.py
 自测：python3 limit_up_radar.py --test   （非交易时间拉今日快照验证）
 """
-import urllib.request, urllib.parse, json, time, datetime, sys
+import urllib.request, urllib.parse, json, time, datetime, sys, os
 from collections import Counter
 
 # ==================== 配置区：你只需要改这里 ====================
@@ -65,9 +65,10 @@ def push(title, body):
     log("📱", title, "|", body.replace("\n", " "))
     if BARK_KEY:
         try:
-            u = ("https://api.day.app/%s/%s/%s?group=A%E8%82%A1%E9%9B%B7%E8%BE%BE&sound=alarm"
-                 % (BARK_KEY, urllib.parse.quote(title, safe=''),
-                    urllib.parse.quote(body, safe='')))
+            u = ("https://api.day.app/" + BARK_KEY + "/"
+                 + urllib.parse.quote(title, safe='') + "/"
+                 + urllib.parse.quote(body, safe='')
+                 + "?group=A%E8%82%A1%E9%9B%B7%E8%BE%BE&sound=alarm")
             http_get(u, timeout=8)
         except Exception as e:
             log("Bark失败:", e)
@@ -144,41 +145,78 @@ GUI4_WINDOW = (10 * 60, 11 * 60)   # 10:00-11:00，只做第一次共振
 GUI4_LOT_MAX = 3000.0             # 轨4 1手红线≤3000
 
 
+BOARD_HOSTS = ["88.push2", "1.push2", "2.push2", "82.push2", "83.push2", "3.push2", "push2"]
+BOARD_MAP_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "board_industry_map.json")
+
+
+def board_clist(fs, fields, fid="f3", pz=300):
+    """东财clist接口多域名故障转移（东财对单域名会随机断连），返回diff列表。"""
+    api = ("api/qt/clist/get?pn=1&pz=%d&po=1&np=1&fltt=2&invt=2&fid=%s&fs=%s&fields=%s"
+           % (pz, fid, fs, fields))
+    last = None
+    for h in BOARD_HOSTS:
+        for _ in range(2):
+            try:
+                d = json.loads(http_get("https://%s.eastmoney.com/%s" % (h, api), timeout=8))
+                diff = (d.get("data") or {}).get("diff") or []
+                if isinstance(diff, dict):
+                    diff = list(diff.values())
+                if diff:
+                    return diff
+            except Exception as e:
+                last = e
+                time.sleep(0.4)
+    log("板块接口全域名失败:", last)
+    return []
+
+
 def get_board_map():
-    """行业板块名→BK代码，缓存30分钟。"""
+    """行业板块名→BK代码：本地静态文件兜底+联网更新（BK代码长期不变），30分钟缓存。"""
     global _BOARD_MAP, _BOARD_MAP_TS
     if _BOARD_MAP and time.time() - _BOARD_MAP_TS < 1800:
         return _BOARD_MAP
+    if _BOARD_MAP_TS and not _BOARD_MAP and time.time() - _BOARD_MAP_TS < 60:
+        return {}
     m = {}
     try:
-        url = ("https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=200&po=1&np=1"
-               "&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f12,f14")
-        d = json.loads(http_get(url))
-        diff = (d.get("data") or {}).get("diff") or []
-        if isinstance(diff, dict):
-            diff = list(diff.values())
-        for x in diff:
-            m[x.get("f14")] = x.get("f12")
-    except Exception as e:
-        log("板块映射失败:", e)
+        with open(BOARD_MAP_FILE, encoding="utf-8") as fp:
+            m = json.load(fp)
+    except Exception:
+        m = {}
+    online = {}
+    for x in board_clist("m:90+t:2", "f12,f14", pz=300):
+        online[x.get("f14")] = x.get("f12")
+    if online:
+        m.update(online)
+        try:
+            with open(BOARD_MAP_FILE, "w", encoding="utf-8") as fp:
+                json.dump(m, fp, ensure_ascii=False)
+        except Exception:
+            pass
+    _BOARD_MAP_TS = time.time()
     if m:
-        _BOARD_MAP, _BOARD_MAP_TS = m, time.time()
+        _BOARD_MAP = m
     return _BOARD_MAP or {}
+
+
+def resolve_board(name):
+    """行业名→BK代码：先精确，再包含匹配（涨停池简称如『汽车零部』→板块榜『汽车零部件』）。"""
+    m = get_board_map()
+    if name in m:
+        return m[name]
+    cands = [(f14, bk) for f14, bk in m.items() if name in f14 or f14 in name]
+    if cands:
+        cands.sort(key=lambda x: abs(len(x[0]) - len(name)))
+        return cands[0][1]
+    return None
 
 
 def board_zhongjun(bk, exclude):
     """板块成分里找未涨停中军：主板、+1~5%、成交≥1亿、现价>今开、价≤100。按成交额排序取前3。"""
     if not bk:
         return []
-    url = ("https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=300&po=1&np=1&fltt=2&invt=2"
-           "&fid=f6&fs=b:%s&fields=f2,f3,f6,f12,f14,f17" % bk)
-    try:
-        d = json.loads(http_get(url))
-        diff = (d.get("data") or {}).get("diff") or []
-        if isinstance(diff, dict):
-            diff = list(diff.values())
-    except Exception as e:
-        log("板块成分失败(%s):" % bk, e)
+    diff = board_clist("b:%s" % bk, "f2,f3,f6,f12,f14,f17", fid="f6", pz=300)
+    if not diff:
         return []
     out = []
     for x in diff:
@@ -228,7 +266,7 @@ def gui4_signal(hy, n_hy, stocks, zb_hy, zbr, leader):
         reason.append("上证%.1f%%崩盘" % sh)
     if not ((leader.get("fund") or 0) > 0):
         reason.append("龙头未封死")
-    bk = get_board_map().get(hy)
+    bk = resolve_board(hy)
     zj = board_zhongjun(bk, {x["c"] for x in stocks}) if gate_ok else []
     if not gate_ok:
         # 不满足硬闸门静默（避免窗口打开瞬间多板块刷屏），仅本地留痕
