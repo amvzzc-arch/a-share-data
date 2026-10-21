@@ -131,9 +131,20 @@ def git_push_snapshot(date):
         rc, out = run(["commit", "-m", f"auction: {date} 9:25集合竞价快照"])
         if rc != 0 and "nothing to commit" not in out:
             return False, "commit失败:" + out[-120:]
-        rc, out = run(["push", "origin", "main"])
-        if rc != 0:
-            return False, "push失败:" + out[-160:]
+        # push 多重兜底：默认 HTTP/2 在国内常被 TLS 重置（Connection reset by peer），
+        # 失败时强制 HTTP/1.1 重试；共 3 轮，间隔 3 秒。
+        pushed, out = False, ""
+        for attempt in range(3):
+            if attempt == 0:
+                rc, out = run(["push", "origin", "main"])
+            else:
+                rc, out = run(["-c", "http.version=HTTP/1.1", "push", "origin", "main"])
+            if rc == 0:
+                pushed = True
+                break
+            time.sleep(3)
+        if not pushed:
+            return False, "push失败(已重试HTTP/1.1):" + out[-160:]
         return True, "已推送GitHub"
     except Exception as e:
         return False, "git异常:%s" % e
