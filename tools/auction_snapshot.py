@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # 9:25 集合竞价快照·独立落盘（补复盘缺口：9:15-9:25 撤单博弈盘后无法还原，至少把 9:25 结果永久留底）
-# launchd 工作日 9:26 触发；手动测试：python3 auction_snapshot.py --dry（只打印不落盘）
-# 只读 limit_up_radar_Mac版.py 里的 WATCH 名单（中军/持仓/一进二），不修改、不依赖雷达运行
-import os, re, ast, sys, csv, datetime, urllib.request, time, urllib.parse
+# launchd 工作日 9:26 触发；手动测试：python3 auction_snapshot.py --dry（只打印不落盘），--no-push（落盘但不推送）
+# 只读同目录 limit_up_radar.py 里的 WATCH 名单（中军/持仓/一进二），不修改、不依赖雷达运行
+# 落盘后自动 git add/commit/push 到 GitHub（失败不阻断，Bark 告警）
+import os, re, ast, sys, csv, datetime, urllib.request, time, urllib.parse, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-RADAR = os.path.join(HERE, "limit_up_radar_Mac版.py")
-OUTDIR = os.path.join(HERE, "auction")
+REPO_ROOT = os.path.dirname(HERE)  # 仓库根（tools 的上一级）
+RADAR = os.path.join(HERE, "limit_up_radar.py")  # 权威雷达脚本，WATCH 名单来源
+OUTDIR = os.path.join(REPO_ROOT, "auction")  # 快照写到仓库根 auction/，GitHub raw 与云端任务可读
 BARK_KEY = "XDg67Er4obRebVkeuQFwq6"
 IDX = ["sh000001", "sz399001", "sz399006"]
 IDX_NAME = {"000001": "上证指数", "399001": "深成指", "399006": "创业板指"}
@@ -104,8 +106,42 @@ def push(title, body):
         print("Bark 失败:", e)
 
 
+def git_push_snapshot(date):
+    """落盘后自动提交并推送 auction/ 到 GitHub。任何失败都不阻断落盘，返回 (ok, msg)。
+    依赖系统钥匙串里的 HTTPS 凭据（不依赖 gh token）；git 在 /usr/bin/git。"""
+    git = "/usr/bin/git" if os.path.exists("/usr/bin/git") else "git"
+    env = dict(os.environ)
+    env["PATH"] = "/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:" + env.get("PATH", "")
+    env["GIT_TERMINAL_PROMPT"] = "0"  # 凭据缺失时直接失败，绝不挂起等输入
+
+    def run(args):
+        r = subprocess.run([git] + args, cwd=REPO_ROOT, env=env,
+                           capture_output=True, text=True, timeout=120)
+        return r.returncode, (r.stdout + r.stderr).strip()
+
+    try:
+        rc, out = run(["status", "--porcelain", "auction"])
+        if rc != 0:
+            return False, "git status失败:" + out[-120:]
+        if not out.strip():
+            return True, "无新增·跳过提交"
+        rc, out = run(["add", "auction"])
+        if rc != 0:
+            return False, "git add失败:" + out[-120:]
+        rc, out = run(["commit", "-m", f"auction: {date} 9:25集合竞价快照"])
+        if rc != 0 and "nothing to commit" not in out:
+            return False, "commit失败:" + out[-120:]
+        rc, out = run(["push", "origin", "main"])
+        if rc != 0:
+            return False, "push失败:" + out[-160:]
+        return True, "已推送GitHub"
+    except Exception as e:
+        return False, "git异常:%s" % e
+
+
 def main():
     dry = "--dry" in sys.argv
+    no_push = "--no-push" in sys.argv
     now = datetime.datetime.now()
     stamp = now.strftime("%Y-%m-%d %H:%M")
     date, hm = now.strftime("%Y%m%d"), now.strftime("%H%M")
@@ -188,6 +224,15 @@ def main():
             "轨3可打: " + ("、".join(t3_can) or "无") + "\n"
             "不排/放弃: " + ("、".join(t3_no + t3_skip) or "无"))
     push("9:26 竞价快照已落盘", body)
+
+    # 自动提交推送 GitHub（失败不阻断落盘，Bark 告知）
+    if not no_push:
+        ok, msg = git_push_snapshot(date)
+        print(("✅ git推送：" if ok else "⚠️ git推送：") + msg)
+        if not ok:
+            push("⚠️竞价快照推送失败", msg)
+    else:
+        print("[--no-push] 已跳过 git 推送。")
 
 
 if __name__ == "__main__":
