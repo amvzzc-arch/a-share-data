@@ -1,0 +1,7 @@
+# launchd / 运行日志
+tools/auction_launchd.log
+*.log
+
+# Python 缓存
+__pycache__/
+*.pyc
