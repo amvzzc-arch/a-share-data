@@ -155,7 +155,8 @@ def main():
     no_push = "--no-push" in sys.argv
     now = datetime.datetime.now()
     stamp = now.strftime("%Y-%m-%d %H:%M")
-    date, hm = now.strftime("%Y%m%d"), now.strftime("%H%M")
+    # 文件名用带连字符 ISO 日期 YYYY-MM-DD，与云端任务读取URL（auction/YYYY-MM-DD_HHMM_竞价快照.md）一致；csv 用 stamp 不受影响
+    date, hm = now.strftime("%Y-%m-%d"), now.strftime("%H%M")
 
     watch = load_watch()
     stocks = sorted({c for k in watch for c in watch[k]})
