@@ -5,3 +5,6 @@ tools/auction_launchd.log
 # Python 缓存
 __pycache__/
 *.pyc
+
+# 腾讯日K本地缓存（限流兜底，每台机器本地生成）
+tools/cache_daily/

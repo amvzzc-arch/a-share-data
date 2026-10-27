@@ -72,17 +72,70 @@ def tx_quotes(codes):
     return out
 
 
-def verdict_track3(p):
-    """轨3 一进二竞价判定（其余条件：竞价换手≥前日5%、板块≥2只高开，9:25 需结合 rank/盘前卡）"""
+def verdict_track3(p, energy=None):
+    """轨3 v2.0 一进二竞价判定（高开区间 + 竞价额/昨成交额；另需板块梯队≥2只高开、封单≥10%看rank）。
+    高开2-5%最佳；5-8%封板瞬间降档/秒板回封不追；>8%不追；0-2%观望；低开不做；一字不排。"""
     if p >= 9.5:
-        return "一字不排"
-    if p > 7:
-        return ">7%不排"
-    if 3 <= p <= 7:
-        return "可打区(待核换手/板块)"
-    if 0 <= p < 3:
-        return "高开不足·观察"
-    return "低开·放弃"
+        return "一字·不排"
+    if p > 8:
+        return ">8%·不追"
+    if 5 <= p <= 8:
+        return "5-8%·降档/秒板回封不追"
+    if 2 <= p < 5:
+        if energy is None:
+            return "2-5%最佳区(待核能量)"
+        if energy >= 8:
+            return "2-5%最佳区·能量极强(≥8%)"
+        if energy >= 5:
+            return "2-5%最佳区·能量达标(≥5%)"
+        if energy >= 3:
+            return "2-5%最佳区·能量及格(3-5%)"
+        return "2-5%最佳区·能量不足(<3%)"
+    if 0 <= p < 2:
+        return "高开不足·观望"
+    return "低开·不做"
+
+
+def relay_auction():
+    """9:25 接力情绪总开关：上一交易日全市场主板首板，今日竞价红盘率/平均高开。
+    晋级率（再涨停）收盘才形成，本快照只给竞价红盘率与均高开，档位四档（最终档看盘中炸板率/龙头）。"""
+    try:
+        sys.path.insert(0, HERE)
+        import limit_up_radar as R
+    except Exception as e:
+        print("复用limit_up_radar失败:", e)
+        return None
+    prev = R.last_trade_date()   # 9:26 当日日K未生成，返回的是昨日
+    zt = R.em_pool("zt", prev)
+    yfb = [x for x in zt if x.get("lbc", 1) == 1 and R.is_main(x["c"])
+           and not R.is_st(x["n"]) and x["c"] not in R.BLACKLIST]
+    if not yfb:
+        return None
+    q = tx_quotes([x["c"] for x in yfb])
+    n = red = 0
+    opens = []
+    for x in yfb:
+        d = q.get(x["c"])
+        if not d or not d.get("prev"):
+            continue
+        n += 1
+        op = (d["open"] / d["prev"] - 1) * 100
+        opens.append(op)
+        if op > 0:
+            red += 1
+    if not n:
+        return None
+    rr = red / n * 100
+    avg = sum(opens) / len(opens)
+    if rr < 40:
+        tier = "冰点(<40%)·空仓转模拟"
+    elif rr < 60:
+        tier = "混沌(40-60%)·仅新主线首日·降级≤200"
+    elif rr >= 70:
+        tier = "偏发酵(≥70%)·待核晋级率与炸板率"
+    else:
+        tier = "拐点候选(60-70%)·待核龙头不闷杀+炸板率<30%"
+    return {"prev": prev, "n": n, "red": round(rr, 0), "avg": round(avg, 2), "tier": tier}
 
 
 def verdict_leader(p):
@@ -169,6 +222,17 @@ def main():
     stocks = sorted({c for k in watch for c in watch[k]})
     q = tx_quotes(IDX + stocks)
 
+    # 昨日首板：①一进二候选的竞价能量分母（昨成交额）；②全市场接力红盘率
+    amt_prev, relay = {}, None
+    try:
+        sys.path.insert(0, HERE)
+        import limit_up_radar as R
+        for x in R.em_pool("zt", R.last_trade_date()):
+            amt_prev[x["c"]] = x.get("amount", 0)
+        relay = relay_auction()
+    except Exception as e:
+        print("昨日首板/接力取数失败:", e)
+
     # 指数
     idx_lines = []
     for full in IDX:
@@ -188,13 +252,15 @@ def main():
                 rows.append(f"| {role} | (取数失败) | {code} | - | - | - | - | - | - |")
                 continue
             if role == "一进二":
-                v = verdict_track3(d["pct"])
-                if "可打" in v:
-                    t3_can.append(f"{d['name']}({code}) {d['pct']:+.1f}%")
-                elif "不排" in v:
-                    t3_no.append(f"{d['name']}({code}) {d['pct']:+.1f}%")
+                energy = (d["amt"] * 1e4 / amt_prev[code] * 100) if amt_prev.get(code) else None
+                v = verdict_track3(d["pct"], energy)
+                es = " 能量%.0f%%" % energy if energy is not None else ""
+                if "最佳" in v:
+                    t3_can.append(f"{d['name']}({code}) {d['pct']:+.1f}%{es}")
+                elif ("不排" in v or "不追" in v or "降档" in v):
+                    t3_no.append(f"{d['name']}({code}) {d['pct']:+.1f}%{es}")
                 else:
-                    t3_skip.append(f"{d['name']}({code}) {d['pct']:+.1f}% {v}")
+                    t3_skip.append(f"{d['name']}({code}) {d['pct']:+.1f}%{es} {v}")
             else:
                 v = verdict_leader(d["pct"])
                 lead.append(f"{d['name']}({code}) {d['pct']:+.1f}% {v}")
@@ -210,13 +276,19 @@ def main():
     md += ["", "## 观察名单（角色：中军/持仓/一进二）", "",
            "| 角色 | 名称 | 代码 | 竞价开盘 | 竞价涨跌 | 竞价量(手) | 竞价额(万) | 竞价换手 | 判定 |",
            "|---|---|---|---|---|---|---|---|---|"] + rows
-    md += ["", "## 轨3 一进二竞价结论", "",
-           f"- **可打区(高开3-7%)**：{('、'.join(t3_can) or '无')}（仍需竞价换手≥前日5%、板块≥2只高开）",
-           f"- **一字/>7% 不排**：{('、'.join(t3_no) or '无')}",
-           f"- **高开不足/低开放弃**：{('、'.join(t3_skip) or '无')}",
+    relay_md = []
+    if relay:
+        relay_md = ["", "## 接力红盘率（v2.0 总开关·昨日首板→今日竞价）", "",
+                    f"- {relay['prev']} 主板首板 **{relay['n']}只** → 今日竞价**红盘率 {relay['red']:.0f}%**、平均高开 {relay['avg']:+.2f}%",
+                    f"- 档位：**{relay['tier']}**（晋级率收盘才形成，9:25 不判）"]
+    md += relay_md
+    md += ["", "## 轨3 一进二竞价结论（拐点接力 v2.0）", "",
+           f"- **高开2-5%最佳+竞价能量**：{('、'.join(t3_can) or '无')}（竞价额/昨成交额≥5%强、≥8%极强；另需板块≥2只高开、封单≥10%）",
+           f"- **一字/5-8%降档/>8%不追**：{('、'.join(t3_no) or '无')}",
+           f"- **高开不足/低开观望**：{('、'.join(t3_skip) or '无')}",
            "", "## 轨1 中军/龙头/持仓", "",
            "\n".join(f"- {x}" for x in lead) if lead else "- 无",
-           "", "数据：腾讯行情；精确大单以中信证券APP为准。仅为投研参考、不构成投资建议。"]
+           "", "数据：腾讯行情/东财涨停池；精确大单以中信证券APP为准。仅为投研参考、不构成投资建议。"]
     text = "\n".join(md)
     print("\n" + text + "\n")
 
@@ -239,10 +311,12 @@ def main():
     print("已落盘:", md_path)
 
     # 精简 Bark（只给结论，不重复云端 9:25 任务的长篇）
+    relay_line = ("接力红盘%.0f%%·%s\n" % (relay["red"], relay["tier"].split("(")[0])) if relay else ""
     body = ("指数 " + " ".join(x.split("|")[1].strip() + x.split("|")[2].strip()
                                for x in idx_lines) + "\n"
-            "轨3可打: " + ("、".join(t3_can) or "无") + "\n"
-            "不排/放弃: " + ("、".join(t3_no + t3_skip) or "无"))
+            + relay_line
+            + "高开2-5%可打: " + ("、".join(t3_can) or "无") + "\n"
+            + "不排/观望: " + ("、".join(t3_no + t3_skip) or "无"))
     push("9:26 竞价快照已落盘", body)
 
     # 自动提交推送 GitHub（失败不阻断落盘，Bark 告知）

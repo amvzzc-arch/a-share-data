@@ -26,20 +26,59 @@ BOARD_LIMIT = 3
 POLL_SEC = 25
 # ⑤ 自选股（每天按8:50作战计划填"中军"，持仓填"持仓"，竞价候选填"一进二"）
 WATCH = {
-    # 10/23 中军/龙头（9:25验板块强弱）：机器人电机=双环/安乃达（卧龙已持仓单列）；AI眼镜=水晶/歌尔(10/28苹果前)；轨5=三花(10/29宇树)
-    "中军": ["002472", "603350", "002273", "002241", "002050"],
-    # 持仓=卧龙电驱100股@25.21（10/22买入，止损24.30风险91，T+1监控，主仓占用期间不新开主仓）
-    "持仓": ["600580"],
-    # 10/23 轨3一进二（仅卧龙腾仓后）：大洋电机首选(板前72,高开3-7%即7.27-7.55,600股/止损7.00)、山河智能备选(军工,高开3-7%即7.48-7.77)
-    "一进二": ["002249", "002097"],
+    # 10/26 中军（轨1右侧，9:35-9:45，优先级三花>双环>拓普，一次一只）：三花002050/双环002472/拓普601689；安乃达603350(机器人电机)；AI眼镜=水晶002273/歌尔002241(10/28苹果前，保留观察)
+    "中军": ["002050", "002472", "601689", "603350", "002273", "002241"],
+    # 持仓：10/23 已在24元卖出卧龙电驱，当前空仓，无持仓T+1监控
+    "持仓": [],
+    # 10/26 附录A 周五午后V反首板（次日不打二板、不追高开>5%、过修复三信号后回踩企稳右侧、10:30前、降级≤200/固定100股）：万向钱潮000559/山东威达002026二选一；大丰603081；派斯林600215(必核净资产为正/市值≤50亿)；罗普斯金002333(仅放量换手板才确认妖胚)；旧候选大洋电机002249/山河智能002097保留观察
+    "一进二": ["000559", "002026", "603081", "600215", "002333", "002249", "002097"],
 }
 # ⑥ 硬筛：只要主板、股价上限（v2.8：当前1.3万阶段统一≤48）
 PRICE_MAX = 48.0
 # 中军涨幅提醒档位（%）
 WATCH_PCT = [2.0, 5.0, 7.0, 9.8]
 # ⑦ 黑名单（永不提示：违纪/退市风险/停牌核查，可自行追加）
-BLACKLIST = {"600792", "002285", "600825", "002585", "000021", "000733", "002185", "002402", "603162", "002535"}  # 002535林州重机2026-10被证监会立案+虚假记载处罚告知，永久拉黑
+BLACKLIST = {"600792", "002285", "600825", "002585", "000021", "000733", "002185", "002402", "603162", "002535", "603278"}  # 002535林州重机2026-10被证监会立案+虚假记载处罚告知永久拉黑；603278纯情绪高标（异动自查无实控人，只看不碰）
 # ============================================================
+
+# ==================== 轨3 v2.0·拐点接力（2026-10-27 拍板）硬红线/评分常量 ====================
+GENE_WINDOW = 120      # 涨停基因窗口：近半年≈120个交易日
+GENE_MIN = 3           # 近半年涨停≥3次（新主线首日硬催化/跨年妖胚豁免，脚本单列待判）
+LTSZ_MIN = 20.0        # 流通市值下限（亿），仅轨3
+LTSZ_MAX = 100.0       # 流通市值上限（亿），仅轨3
+FUND_AMT_MIN = 10.0    # 封单额≥当日成交额10%（强）
+FBT_DEADLINE = 110000  # 当日首板须11:00前封死（13:00后走附录A，不进一进二）
+YIZI_FBT = 93000       # 集合竞价/9:30开盘即封死=一字板
+WULIANG_FBT = 93100    # 9:30:00-9:31:00 且无换手=无量秒板
+YEAR_RISE_MAX = 400.0  # 近一年涨幅≥400%（≈5倍）列高标，只看不碰
+# 次日竞价口径（9:25验证，本收盘rank只给标准）
+OPEN_SWEET = (2.0, 5.0)   # 高开2-5%最佳
+OPEN_DOWNGRADE = 8.0      # 5-8%封板瞬间降档/秒板回封不追；>8%不追
+AUCTION_AMT_MIN = 5.0     # 竞价额/昨成交额≥5%强，≥8%极强
+DAILY_BFQ_CACHE = {}
+CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache_daily")
+
+
+def _kfile_load(code, tag):
+    """读日K文件缓存，返回 (rows, fetched_day)；无则 (None, None)。"""
+    p = os.path.join(CACHE_DIR, "%s_%s.json" % (code, tag))
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            obj = json.load(f)
+        return obj.get("rows"), obj.get("day")
+    except Exception:
+        return None, None
+
+
+def _kfile_save(code, tag, rows, day):
+    """写日K文件缓存（自然日；当天重跑直接复用，避免反复拉腾讯触发501限流）。"""
+    try:
+        os.makedirs(CACHE_DIR, exist_ok=True)
+        p = os.path.join(CACHE_DIR, "%s_%s.json" % (code, tag))
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump({"day": day, "rows": rows}, f, ensure_ascii=False)
+    except Exception:
+        pass
 
 EM_HEADERS = {"User-Agent": "Mozilla/5.0", "Referer": "https://quote.eastmoney.com/"}
 UT = "7eea3edcaed734bea9cbfc24409ed989"
@@ -303,8 +342,23 @@ def today_str():
 PRE_CACHE = {}
 
 
+def em_index_dates(n=25):
+    """东财上证指数日K交易日历（YYYYMMDD 时间正序），盘前最后一根=昨日、盘后=今天；腾讯限流时的可靠主源。"""
+    try:
+        u = ("http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001"
+             "&fields1=f1,f2,f3&fields2=f51,f52,f53&klt=101&fqt=1&beg=0&end=20500000&lmt=%d" % n)
+        d = json.loads(http_get(u))
+        kl = (d.get("data") or {}).get("klines") or []
+        return [s.split(",")[0].replace("-", "") for s in kl]
+    except Exception:
+        return []
+
+
 def last_trade_date():
-    """最近一个已收盘交易日 YYYYMMDD（取上证指数日K最后一根；收盘后=今天，盘前=昨天）。"""
+    """最近一个已收盘交易日 YYYYMMDD（东财指数日K为主；收盘后=今天，盘前=昨天）。"""
+    ds = em_index_dates(10)
+    if ds:
+        return ds[-1]
     try:
         end = datetime.datetime.now().strftime("%Y-%m-%d")
         start = (datetime.datetime.now() - datetime.timedelta(days=15)).strftime("%Y-%m-%d")
@@ -318,28 +372,145 @@ def last_trade_date():
         return today_str()
 
 
-def tencent_daily(code, n=30):
-    """腾讯前复权日K（零依赖）：返回 [{date,o,c,h,l,v}...] 时间正序，v单位手。"""
+def em_daily(code, fqt=0, n=250):
+    """东财日K（push2his，主源）：fqt=0不复权/1前复权；返回 [{date,o,c,h,l,v(手)}...] 时间正序。
+    与涨停池同源、稳定不封IP；内存+文件缓存（自然日），网络失败回退旧缓存兜底。"""
+    tag = "em%d" % fqt
+    ck = (code, tag)
+    if ck in DAILY_BFQ_CACHE:
+        return DAILY_BFQ_CACHE[ck]
+    today = datetime.datetime.now().strftime("%Y%m%d")
+    fc, fday = _kfile_load(code, tag)
+    if fc and fday == today:
+        DAILY_BFQ_CACHE[ck] = fc
+        return fc
+    secid = ("1." if code[0] == "6" else "0.") + code
+    u = ("http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=%s"
+         "&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58"
+         "&klt=101&fqt=%d&beg=0&end=20500000&lmt=%d" % (secid, fqt, n + 20))
+    out = []
+    for attempt in range(3):
+        try:
+            d = json.loads(http_get(u))
+            kl = (d.get("data") or {}).get("klines") or []
+            for s in kl:
+                p = s.split(",")
+                try:
+                    out.append({"date": p[0], "o": float(p[1]), "c": float(p[2]),
+                                "h": float(p[3]), "l": float(p[4]), "v": float(p[5])})
+                except Exception:
+                    continue
+            if out:
+                out = out[-n:]
+                _kfile_save(code, tag, out, today)
+                break
+        except Exception as e:
+            if attempt < 2 and "501" in str(e):
+                time.sleep(1.2 * (attempt + 1))
+                out = []
+                continue
+            log("东财日K失败", code, e)
+            break
+    if not out and fc:
+        log("东财日K失败，回退本地缓存", code, "末日", fc[-1]["date"])
+        out = fc
+    DAILY_BFQ_CACHE[ck] = out
+    return out
+
+
+def _tx_daily(code, n, adjust, days_back):
+    """腾讯日K兜底（adjust='bfq'不复权/'qfq'前复权）；内存+文件缓存。"""
+    tag = "tx%s%d" % (adjust, n)
+    ck = (code, tag)
+    if ck in DAILY_BFQ_CACHE:
+        return DAILY_BFQ_CACHE[ck]
+    today = datetime.datetime.now().strftime("%Y%m%d")
+    fc, fday = _kfile_load(code, tag)
+    if fc and fday == today:
+        DAILY_BFQ_CACHE[ck] = fc
+        return fc
     q = ("sh" if code[0] == "6" else "sz") + code
     end = datetime.datetime.now().strftime("%Y-%m-%d")
-    start = (datetime.datetime.now() - datetime.timedelta(days=120)).strftime("%Y-%m-%d")
-    u = ("https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=%s,day,%s,%s,%d,qfq"
-         % (q, start, end, n + 12))
-    try:
-        d = json.loads(http_get(u))
-        node = d["data"][q]
-        ks = node.get("qfqday") or node.get("day") or []
-        out = []
-        for k in ks:
-            try:
-                out.append({"date": k[0], "o": float(k[1]), "c": float(k[2]),
-                            "h": float(k[3]), "l": float(k[4]), "v": float(k[5])})
-            except Exception:
+    start = (datetime.datetime.now() - datetime.timedelta(days=days_back)).strftime("%Y-%m-%d")
+    u = ("https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=%s,day,%s,%s,%d,%s"
+         % (q, start, end, n + 12, adjust))
+    out = []
+    for attempt in range(3):
+        try:
+            d = json.loads(http_get(u))
+            node = d["data"][q]
+            ks = node.get("day") or node.get("qfqday") or []
+            for k in ks:
+                try:
+                    out.append({"date": k[0], "o": float(k[1]), "c": float(k[2]),
+                                "h": float(k[3]), "l": float(k[4]), "v": float(k[5])})
+                except Exception:
+                    continue
+            if out:
+                _kfile_save(code, tag, out, today)
+                break
+        except Exception as e:
+            if attempt < 2 and "501" in str(e):
+                time.sleep(1.5 * (attempt + 1))
+                out = []
                 continue
-        return out
-    except Exception as e:
-        log("日K失败", code, e)
-        return []
+            log("腾讯日K失败", code, e)
+            break
+    if not out and fc:
+        log("腾讯日K限流，回退本地缓存", code, "末日", fc[-1]["date"])
+        out = fc
+    DAILY_BFQ_CACHE[ck] = out
+    return out
+
+
+def tencent_daily(code, n=30):
+    """前复权日K（板前动作用）：东财主源、腾讯兜底。返回 [{date,o,c,h,l,v(手)}...] 时间正序。"""
+    rows = em_daily(code, 1, n)
+    if rows:
+        return rows
+    return _tx_daily(code, n, "qfq", 120)
+
+
+def daily_bfq(code, n=250):
+    """【不复权】日K（涨停基因/近一年涨幅必须用不复权，否则除权后历史涨停失真）：
+    东财主源、腾讯兜底；返回 [{date,o,c,h,l,v}...] 时间正序，约 n 根（默认一年）。"""
+    rows = em_daily(code, 0, n)
+    if rows:
+        return rows
+    return _tx_daily(code, n, "bfq", 400)
+
+
+def limit_up_gene(code, limit_date=None):
+    """轨3 v2.0 涨停基因：近 GENE_WINDOW 个交易日内【封死】涨停次数（主板10%，留容差9.5~10.8%）。
+    要求收盘≈当日最高（c≈h）才算封死，排除盘中触板回落。
+    limit_date：只统计到该日（含）；收盘rank传当日=含今日首板。
+    返回 {count, dates, hit}。"""
+    ks = daily_bfq(code, 250)
+    if limit_date:
+        ld = limit_date[:4] + "-" + limit_date[4:6] + "-" + limit_date[6:8]
+        ks = [k for k in ks if k["date"] <= ld]
+    if not ks:
+        return {"count": None, "dates": [], "hit": False}
+    ks = ks[-GENE_WINDOW:]
+    dates = []
+    for i in range(1, len(ks)):
+        pct = (ks[i]["c"] / ks[i - 1]["c"] - 1) * 100
+        seal = abs(ks[i]["c"] - ks[i]["h"]) / ks[i]["c"] < 0.005   # 收盘≈最高=封死
+        if 9.5 <= pct <= 10.8 and seal:
+            dates.append(ks[i]["date"])
+    return {"count": len(dates), "dates": dates, "hit": len(dates) >= GENE_MIN}
+
+
+def year_rise(code, limit_date=None):
+    """近一年涨幅(%)（用约250根不复权日K首尾），≥400%（≈5倍）列高标；数据不足返回None。"""
+    ks = daily_bfq(code, 250)
+    if limit_date:
+        ld = limit_date[:4] + "-" + limit_date[4:6] + "-" + limit_date[6:8]
+        ks = [k for k in ks if k["date"] <= ld]
+    if len(ks) < 60:
+        return None
+    base, now = ks[0]["c"], ks[-1]["c"]
+    return (now / base - 1) * 100 if base else None
 
 
 def board_pre_action(code, limit_date=None):
@@ -520,6 +691,121 @@ def fbt_str(fbt):
     if not fbt:
         return "--"
     return "%02d:%02d" % (fbt // 10000, (fbt // 100) % 100)
+
+
+# ==================== 轨3 v2.0 指标：封单额/一字/封板40分/板块25分/接力红盘率 ====================
+def fund_amt_ratio(x):
+    """封单额/当日成交额(%)。fund、amount 单位均为元。≥10%为强（v2.0 拍板）。"""
+    fund, amt = x.get("fund", 0) or 0, x.get("amount", 0) or 0
+    return fund / amt * 100 if amt else 0.0
+
+
+def is_yizi(x):
+    """一字/无量秒板（v2.0 不做、不排）：①集合竞价/9:30开盘即封死=一字；
+    ②9:30:00-9:31:00 且0炸板、换手<2%=无量秒板。返回 (是否, 原因)。"""
+    fbt = x.get("fbt", 0) or 0
+    zbc = x.get("zbc", 0) or 0
+    hs = x.get("hs", 0) or 0
+    if fbt <= YIZI_FBT:
+        return True, "一字板"
+    if fbt <= WULIANG_FBT and zbc == 0 and hs < 2:
+        return True, "无量秒板"
+    return False, ""
+
+
+def seal40(x):
+    """封板质量 40 分制（v2.0 打分权重①）：首板时间12 + 炸板次数10 + 封单额/成交额10 + 换手8。
+    炸板≥3次在硬红线直接否决；==2 在调用方标降档。"""
+    fbt = x.get("fbt", 0) or 0
+    t = fbt if fbt < 240000 else 95900
+    s_t = 12 if t <= 93500 else 10 if t <= 94500 else 8 if t <= 101500 else \
+        6 if t <= 110000 else 3
+    zbc = x.get("zbc", 0) or 0
+    s_z = 10 if zbc == 0 else 7 if zbc == 1 else 4 if zbc == 2 else 0
+    fr = fund_amt_ratio(x)
+    s_f = 10 if fr >= 20 else 8 if fr >= FUND_AMT_MIN else 5 if fr >= 5 else 2
+    hs = x.get("hs", 0) or 0
+    s_h = 8 if 7 <= hs <= 15 else 6 if (5 <= hs < 7 or 15 < hs <= 20) else \
+        4 if 3 <= hs < 5 else 2
+    return s_t + s_z + s_f + s_h, {"t": s_t, "z": s_z, "f": s_f, "h": s_h,
+                                   "fr": round(fr, 0), "tstr": fbt_str(fbt)}
+
+
+def board25(tier):
+    """板块共振 25 分制（v2.0 打分权重②）：板块当日涨停只数 tier；tier<2 孤板在硬红线剔除。"""
+    return 25 if tier >= 5 else 21 if tier == 4 else 17 if tier == 3 else 12 if tier == 2 else 0
+
+
+def prev_trade_date(ref):
+    """ref(YYYYMMDD) 之前最近一个已收盘交易日。东财指数日K为主、腾讯兜底。"""
+    ds = em_index_dates(25)
+    pri = [s for s in ds if s < ref]
+    if pri:
+        return pri[-1]
+    try:
+        end = datetime.datetime.now().strftime("%Y-%m-%d")
+        start = (datetime.datetime.now() - datetime.timedelta(days=25)).strftime("%Y-%m-%d")
+        u = ("https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh000001,day,%s,%s,25,qfq"
+             % (start, end))
+        d = json.loads(http_get(u))
+        ks = (d["data"]["sh000001"].get("day")
+              or d["data"]["sh000001"].get("qfqday") or [])
+        ds2 = [k[0].replace("-", "") for k in ks]
+        pri2 = [s for s in ds2 if s < ref]
+        return pri2[-1] if pri2 else None
+    except Exception:
+        return None
+
+
+def relay_sentiment(today=None):
+    """接力红盘率（v2.0 接力情绪总开关）：昨日主板首板，今日竞价/当前的红盘率、晋级率、平均高开。
+    返回 dict；档由四档规则给建议（最终档结合当日炸板率/龙头是否闷杀由窗口确认）。"""
+    today = today or last_trade_date()
+    prev = prev_trade_date(today)
+    out = {"today": today, "prev": prev, "n": 0, "open_red": None, "now_red": None,
+           "promote": None, "avg_open": None, "tier": "数据不足", "note": ""}
+    if not prev:
+        out["note"] = "取不到上一交易日"
+        return out
+    zt_prev = em_pool("zt", prev)
+    yfb = [x for x in zt_prev if x.get("lbc", 1) == 1 and is_main(x["c"])
+           and not is_st(x["n"]) and x["c"] not in BLACKLIST]
+    if not yfb:
+        out["note"] = "昨日无主板首板"
+        return out
+    q = tencent_quotes([x["c"] for x in yfb])
+    zt_today = {x["c"] for x in em_pool("zt", today)}
+    valid = open_red = now_red = prom = 0
+    opens = []
+    for x in yfb:
+        d = q.get(x["c"])
+        if not d or not d.get("prev"):
+            continue
+        valid += 1
+        op = (d["open"] / d["prev"] - 1) * 100
+        opens.append(op)
+        if op > 0:
+            open_red += 1
+        if d.get("pct", 0) > 0:
+            now_red += 1
+        if x["c"] in zt_today:
+            prom += 1
+    if not valid:
+        out["note"] = "昨日首板今日行情取不到"
+        return out
+    orr = open_red / valid * 100
+    out.update(n=valid, open_red=round(orr, 1), now_red=round(now_red / valid * 100, 1),
+               promote=round(prom / valid * 100, 1),
+               avg_open=round(sum(opens) / len(opens), 2))
+    if orr < 40:
+        out["tier"] = "冰点(<40%)→空仓转模拟"
+    elif orr < 60:
+        out["tier"] = "混沌(40-60%)→仅新主线首日·降级≤200"
+    elif orr >= 70 and out["promote"] >= 25:
+        out["tier"] = "发酵(高开/晋级高)→常规≤250"
+    else:
+        out["tier"] = "拐点候选(>60%)→待核龙头不闷杀+炸板率<30%·降级≤200"
+    return out
 
 
 def mkt_phase():
@@ -748,12 +1034,17 @@ class Radar:
 
 
 def collect_first_boards(date):
-    """收集当日主板首板，返回 (合格候选list, 剔除list)。三层漏斗：板前动作+封板质量+板块梯队。"""
+    """轨3 v2.0·拐点接力：收集当日主板首板（主板60/00/003、价≤48）。
+    硬红线：流通市值20-100亿、成交≥1亿、11:00前封死、非一字/无量秒板、板块≥2只、
+           炸板≤2、近一年涨幅<400%、非黑名单；不看PE/净利润、板前不硬否决。
+    涨停基因近半年≥3为硬红线，未达标但其余全过者单列 exempt（新主线首日硬催化/跨年妖胚豁免，人工确认）。
+    打分：封板40 + 板块25 + 板前15（竞价20次日9:25补），满分80。
+    返回 (cand, exempt, drop, stat)。"""
     zt = em_pool("zt", date)
     zb = em_pool("zb", date)
     zbr = len(zb) / (len(zt) + len(zb)) * 100 if (len(zt) + len(zb)) else 0
     board_cnt = Counter(x.get("hybk", "其他") for x in zt)
-    cand, drop = [], []
+    cand, exempt, drop = [], [], []
     raws = [x for x in zt if x.get("lbc", 1) == 1 and x.get("c") not in BLACKLIST
             and is_main(x["c"]) and not is_st(x["n"])]
     qmap = tencent_quotes([x["c"] for x in raws])
@@ -761,99 +1052,177 @@ def collect_first_boards(date):
         c = x["c"]
         price = x.get("p", 0) / 1000
         amt = x.get("amount", 0) / 1e8
+        ltsz = x.get("ltsz", 0) / 1e8
         hy = x.get("hybk", "其他")
         tier = board_cnt.get(hy, 1)
-        pre = board_pre_action(c, date)
-        seal, sd = seal_score(x)
+        fbt = x.get("fbt", 0) or 0
+        zbc = x.get("zbc", 0) or 0
+        hs = x.get("hs", 0) or 0
+        fr = fund_amt_ratio(x)
+        yizi, yk = is_yizi(x)
+        seal, sd = seal40(x)
+        bscore = board25(tier)
         pe = (qmap.get(c) or {}).get("pe")
-        lot = round(price * 100)
-        risk = round(price * 100 * 0.05)
         row = {"x": x, "code": c, "name": x["n"], "hy": hy, "tier": tier,
-               "price": price, "amt": amt, "pe": pe, "lot": lot, "risk": risk,
-               "pre": pre, "seal": seal, "sd": sd}
-        # ---- 硬门槛 ----
+               "price": price, "amt": amt, "ltsz": ltsz, "pe": pe,
+               "lot": round(price * 100), "risk5": round(price * 100 * 0.05),
+               "risk3": round(price * 100 * 0.03), "pre": None, "seal": seal,
+               "sd": sd, "bscore": bscore, "pscore": 0, "gene": None, "yr": None,
+               "fr": fr, "zbc": zbc, "fbt": fbt, "hs": hs, "yizi": yizi, "yk": yk,
+               "downgrade": [], "comp": 0}
+
+        # ---- 第一层：纯池子字段硬红线（0次日K请求，先砍掉绝大多数）----
         reasons = []
         if price <= 0 or price > PRICE_MAX:
             reasons.append("股价>%g" % PRICE_MAX)
+        if ltsz < LTSZ_MIN or ltsz > LTSZ_MAX:
+            reasons.append("流通%.0f亿超20-100" % ltsz)
         if amt < 1.0:
             reasons.append("成交<1亿")
-        if pe is not None and pe <= 0:
-            reasons.append("PE为负")
+        if fbt > FBT_DEADLINE:
+            reasons.append("%s后封板(走附录A)" % fbt_str(fbt))
+        if yizi:
+            reasons.append(yk)
         if tier < 2:
             reasons.append("孤板(行业仅1)")
-        if pre["pre"] is None:
-            reasons.append(pre.get("note") or "无板前数据")
-        elif pre["pre"] < 45:
-            reasons.append("板前%d裸拉" % pre["pre"])
-        if "阴跌" in (pre.get("veto") or ""):
-            reasons.append(pre["veto"])
+        if zbc >= 3:
+            reasons.append("炸板%d次" % zbc)
         if reasons:
             row["reasons"] = reasons
             drop.append(row)
+            continue
+
+        # ---- 第二层：不复权日K（涨停基因 + 近一年涨幅），1次请求 ----
+        time.sleep(0.15)
+        gene = limit_up_gene(c, date)
+        yr = year_rise(c, date)
+        row["gene"], row["yr"] = gene, yr
+        if gene["count"] is None:
+            row["reasons"] = ["日K缺失(基因取不到)"]
+            drop.append(row)
+            continue
+        if yr is not None and yr >= YEAR_RISE_MAX:
+            row["reasons"] = ["年涨%.0f%%高标" % yr]
+            drop.append(row)
+            continue
+
+        # ---- 第三层：前复权板前动作（仅前两层全过才拉，1次请求）----
+        time.sleep(0.15)
+        pre = board_pre_action(c, date)
+        row["pre"] = pre
+        pscore = round((pre["pre"] or 0) * 0.15, 1) if pre["pre"] is not None else 0
+        row["pscore"] = pscore
+        dg = []
+        if zbc == 2:
+            dg.append("炸2次降档")
+        if fr < FUND_AMT_MIN:
+            dg.append("封单%.0f%%<10%%" % fr)
+        if pre["pre"] is not None and pre["pre"] < 45:
+            dg.append("板前%d裸拉" % pre["pre"])
+        row["downgrade"] = dg
+        row["comp"] = round(seal + bscore + pscore, 1)
+        if not gene["hit"]:
+            row["reasons"] = ["基因%d次(需新主线首日/妖胚豁免)" % gene["count"]]
+            exempt.append(row)
         else:
-            comp = round((pre["pre"] or 0) * 0.45 + seal * 0.55, 1)
-            row["comp"] = comp
             cand.append(row)
     cand.sort(key=lambda r: -r["comp"])
-    return cand, drop, {"zt": len(zt), "zb": len(zb), "zbr": zbr}
+    exempt.sort(key=lambda r: -r["comp"])
+    return cand, exempt, drop, {"zt": len(zt), "zb": len(zb), "zbr": zbr}
 
 
 def cmd_rank(push_too=True, date=None):
     date = date or last_trade_date()
-    cand, drop, stat = collect_first_boards(date)
-    L = ["📋 一进二候选排序（%s-%s 首板·三层漏斗）" % (date[4:6], date[6:8]),
-         "涨停%d 炸板率%.0f%% ｜ 主板首板合格%d只" % (stat["zt"], stat["zbr"], len(cand))]
+    cand, exempt, drop, stat = collect_first_boards(date)
+    relay = relay_sentiment(date)
+    L = ["📋 一进二候选·拐点接力 v2.0（%s-%s 首板）" % (date[4:6], date[6:8]),
+         "涨停%d 炸板率%.0f%% ｜ 合格%d只 基因豁免待判%d只"
+         % (stat["zt"], stat["zbr"], len(cand), len(exempt))]
+    if relay.get("n"):
+        L.append("【接力情绪·%s首板%d只→%s】竞价红盘%.0f%% 收盘红盘%.0f%% 晋级%.0f%% 均高开%.1f%%"
+                 % (relay["prev"], relay["n"], relay["today"][4:], relay["open_red"],
+                    relay["now_red"], relay["promote"], relay["avg_open"]))
+        L.append("→ %s（拐点/发酵还需结合当日炸板率、龙头是否闷杀）" % relay["tier"])
+    elif relay.get("note"):
+        L.append("【接力情绪】" + relay["note"])
     if cand:
-        L.append("【✅可打·按综合分，前5】")
+        L.append("【✅可打·封板40+板块25+板前15，竞价20明早补，前5】")
         for i, r in enumerate(cand[:5], 1):
             p, sd = r["pre"], r["sd"]
-            hi = "高位" if "高位" in (p.get("veto") or "") else ""
+            pv = p["pre"] if p["pre"] is not None else 0
+            dg = ("｜降档:" + "/".join(r["downgrade"])) if r["downgrade"] else ""
             L.append(
-                "%d %s%s｜%s梯队%d\n"
-                "  板前%d(%s 洗%d/试%d/控%d·%d天%s) 封板%d(%s/炸%d/封单%.1f%%/换手%.0f%%) 综合%.0f\n"
-                "  收%.2f 1手%d元 -5%%风险%d元 PE%s"
-                % (i, r["name"], r["code"], r["hy"], r["tier"],
-                   p["pre"], p["grade"], p["wash"], p["test"], p["ctrl"], p["days"],
-                   ("/" + hi if hi else ""), r["seal"], sd["tstr"],
-                   r["x"].get("zbc", 0), sd["fr"], r["x"].get("hs", 0), r["comp"],
-                   r["price"], r["lot"], r["risk"],
-                   ("%.0f" % r["pe"]) if r["pe"] else "?"))
+                "%d %s%s｜%s梯队%d 流通%.0f亿\n"
+                "  封板%d/40(首%s/炸%d/封单%.0f%%/换手%.0f%%) 板块%d/25 板前%d/15(%s) 基因%d 综合%d/80\n"
+                "  收%.2f 成交%.1f亿 1手%d元 -5%%风险%d元 -3%%风险%d元%s\n"
+                "  明早：高开2-5%%、竞价额/昨成交≥5%%、封单≥10%%、一字不排、>8%%不追"
+                % (i, r["name"], r["code"], r["hy"], r["tier"], r["ltsz"],
+                   r["seal"], sd["tstr"], r["zbc"], r["fr"], r["hs"],
+                   r["bscore"], r["pscore"], p["grade"], r["gene"]["count"], r["comp"],
+                   r["price"], r["amt"], r["lot"], r["risk5"], r["risk3"], dg))
     else:
         L.append("【✅无合格候选——空仓，不硬凑】")
+    if exempt:
+        L.append("【⚪仅差涨停基因·新主线首日硬催化/跨年妖胚可豁免(人工确认)】" + "、".join(
+            "%s%s(%s·基因%d次/综合%d)" % (r["name"], r["code"], r["hy"],
+                                         r["gene"]["count"], r["comp"])
+            for r in exempt[:8]))
     if drop:
-        watch = [r for r in drop if (r["pre"]["pre"] or 0) >= 70
-                 and any("孤板" in x for x in r["reasons"])]
-        if watch:
-            L.append("【⚪板前好但孤板·明天看板块是否跟上】" + "、".join(
-                "%s%s(%s·板前%d)" % (r["name"], r["code"], r["hy"], r["pre"]["pre"])
-                for r in watch[:5]))
-        other = [r for r in drop if r not in watch]
-        if other:
-            L.append("【❌剔除】" + "；".join(
-                "%s(%s)" % (r["name"], r["reasons"][0]) for r in other[:12]))
-    L.append("⏭明早第三层：高开3-7%、竞价换手≥前日5%、板块≥2只高开；一字/>7%不排，打不到不等回踩。")
+        L.append("【❌剔除】" + "；".join(
+            "%s(%s)" % (r["name"], r["reasons"][0]) for r in drop[:15]))
+    L.append("⏭明日9:25：先看接力红盘率四档定风险档；高开2-5%最佳、竞价额/昨成交额≥5%(≥8%极强)、"
+             "封单≥10%、不做一字/无量秒板、>8%不追、打不到不等回踩。")
     msg = "\n".join(L)
     print(msg)
     if push_too:
-        push("📋一进二候选排序（%s）" % date[4:], "\n".join(L[1:]))
-    return cand, drop
+        push("📋一进二候选v2.0（%s）" % date[4:], "\n".join(L[1:]))
+    return cand, exempt, drop
 
 
 def cmd_board(code):
     pre = board_pre_action(code, None)
     q = tencent_quotes([code]).get(code)
-    print("==== %s 板前动作诊断 ====" % code)
+    print("==== %s 板前动作诊断（v2.0）====" % code)
     if q:
-        print("名称%s 现价%.2f 涨幅%.1f%% PE=%s" % (q["name"], q["price"], q["pct"], q["pe"]))
+        print("名称%s 现价%.2f 涨幅%.1f%% PE=%s（v2.0不看PE）"
+              % (q["name"], q["price"], q["pct"], q["pe"]))
+    gene = limit_up_gene(code)
+    print("涨停基因：近半年封板%d次 %s（%s）"
+          % (gene["count"], "✅达标" if gene["hit"] else "✗<3（仅新主线首日/妖胚可豁免）",
+             "、".join(gene["dates"][-6:])))
+    yr = year_rise(code)
+    if yr is not None:
+        print("近一年涨幅：%.0f%% %s" % (yr, "✗≥400%高标，只看不碰" if yr >= YEAR_RISE_MAX else "✅"))
+    x = next((z for z in em_pool("zt", last_trade_date()) if z["c"] == code), None)
+    if x:
+        yizi, yk = is_yizi(x)
+        print("封板：%s首封 炸%d次 封单/成交%.0f%% 换手%.1f%% 流通%.1f亿 成交%.1f亿 %s"
+              % (fbt_str(x.get("fbt")), x.get("zbc", 0), fund_amt_ratio(x),
+                 x.get("hs", 0), x.get("ltsz", 0) / 1e8, x.get("amount", 0) / 1e8,
+                 ("⛔" + yk) if yizi else "✅换手板"))
     if pre["pre"] is None:
         print("无法评分：", pre.get("note"))
         return
-    print("板前总分 %d / %s（平台%d天，箱体%.1f%%）" % (pre["pre"], pre["grade"], pre["days"], pre["box"] or 0))
+    print("板前总分 %d / %s（平台%d天，箱体%.1f%%，v2.0权重15%%不硬否决）"
+          % (pre["pre"], pre["grade"], pre["days"], pre["box"] or 0))
     print("  控盘%d 试盘%d 洗盘%d" % (pre["ctrl"], pre["test"], pre["wash"]))
     print("  信号：%s" % ("、".join(pre["tags"]) or "无"))
-    print("  否决：%s" % (pre["veto"] or "无"))
-    print("  判读：" + ("≥75板前完整=主力蓄谋，可入一进二池；60-74有准备；45-59勉强；<45裸拉杂毛，不做"
-                       if pre["pre"] >= 45 else "<45=无准备裸拉，不进一进二"))
+    print("  否决/提示：%s" % (pre["veto"] or "无"))
+    print("  判读：板前完整≥75优先；45-59一般；<45裸拉仅在有板块共振时保留、不单独否决。")
+
+
+def cmd_relay(date=None):
+    r = relay_sentiment(date)
+    if not r.get("n"):
+        print("接力情绪取不到：", r.get("note") or "未知")
+        return
+    print("==== 接力红盘率（%s 首板 → %s）====" % (r["prev"], r["today"]))
+    print("昨日主板首板：%d只" % r["n"])
+    print("今日竞价红盘率：%.0f%%（开盘高开占比）" % r["open_red"])
+    print("今日收盘红盘率：%.0f%%" % r["now_red"])
+    print("今日晋级率（再涨停）：%.0f%%" % r["promote"])
+    print("平均竞价高开：%.2f%%" % r["avg_open"])
+    print("建议档位：%s" % r["tier"])
 
 
 def main():
@@ -864,11 +1233,18 @@ def main():
         r.tick()
         return
     if "--rank" in sys.argv:
-        log("收盘一进二候选排序（板前动作+封板质量）")
+        log("收盘一进二候选排序（轨3 v2.0 拐点接力）")
         d = None
         if "--date" in sys.argv:
             d = sys.argv[sys.argv.index("--date") + 1]
         cmd_rank(push_too=True, date=d)
+        return
+    if "--relay" in sys.argv:
+        d = None
+        if "--date" in sys.argv:
+            d = sys.argv[sys.argv.index("--date") + 1]
+        log("接力红盘率（昨日首板→今日表现）")
+        cmd_relay(d)
         return
     if "--board" in sys.argv:
         i = sys.argv.index("--board")
