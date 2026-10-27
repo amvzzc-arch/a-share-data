@@ -131,8 +131,10 @@ def git_push_snapshot(date):
         rc, out = run(["commit", "-m", f"auction: {date} 9:25集合竞价快照"])
         if rc != 0 and "nothing to commit" not in out:
             return False, "commit失败:" + out[-120:]
-        # push 多重兜底：默认 HTTP/2 在国内常被 TLS 重置（Connection reset by peer），
-        # 失败时强制 HTTP/1.1 重试；共 3 轮，间隔 3 秒。
+        # push 多重兜底：
+        # 1) 默认 HTTP/2 在国内常被 TLS 重置（Connection reset by peer），失败强制 HTTP/1.1 重试，共 3 轮间隔 3 秒；
+        # 2) 若提示 non-fast-forward（其他窗口已先 push），先 autoStash rebase 拉齐再重推；
+        #    autoStash 自动暂存/恢复工作区在制品（本脚本只提交 auction/，与 tools/ 在制品不冲突）。
         pushed, out = False, ""
         for attempt in range(3):
             if attempt == 0:
@@ -142,6 +144,11 @@ def git_push_snapshot(date):
             if rc == 0:
                 pushed = True
                 break
+            if any(k in out.lower() for k in ("non-fast-forward", "fetch first", "rejected", "behind", "integrate")):
+                rc2, out2 = run(["-c", "rebase.autoStash=true", "pull", "--rebase", "origin", "main"])
+                if rc2 != 0:
+                    return False, "rebase拉齐失败:" + out2[-160:]
+                continue  # 已拉齐，立即重推（不 sleep）
             time.sleep(3)
         if not pushed:
             return False, "push失败(已重试HTTP/1.1):" + out[-160:]
@@ -155,7 +162,7 @@ def main():
     no_push = "--no-push" in sys.argv
     now = datetime.datetime.now()
     stamp = now.strftime("%Y-%m-%d %H:%M")
-    # 文件名用带连字符 ISO 日期 YYYY-MM-DD，与云端任务读取URL（auction/YYYY-MM-DD_HHMM_竞价快照.md）一致；csv 用 stamp 不受影响
+    # 快照文件名统一 ASCII：auction_YYYY-MM-DD_HHMM.md（jsDelivr 对中文路径 URL 编码会 404，云端任务读取URL以此为准）；csv 用 stamp 不受影响
     date, hm = now.strftime("%Y-%m-%d"), now.strftime("%H%M")
 
     watch = load_watch()
@@ -218,7 +225,8 @@ def main():
         return
 
     os.makedirs(OUTDIR, exist_ok=True)
-    md_path = os.path.join(OUTDIR, f"{date}_{hm}_竞价快照.md")
+    # 统一 ASCII 文件名 auction_YYYY-MM-DD_HHMM.md：jsDelivr 对中文路径做 URL 编码会 404，云端任务才能稳定读
+    md_path = os.path.join(OUTDIR, f"auction_{date}_{hm}.md")
     csv_path = os.path.join(OUTDIR, "auction_history.csv")
     open(md_path, "w", encoding="utf-8").write(text)
     new = not os.path.exists(csv_path)

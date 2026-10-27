@@ -85,6 +85,7 @@ def render_md(st):
         f"- 熔断状态：{st.get('fuse') or '（未记录）'}",
         f"- 今日窗口结论：{win_text}",
         f"- 明日关注：{st.get('tomorrow') or '（待更新）'}",
+        "- 竞价快照：auction/auction_YYYY-MM-DD_0926.md（工作日9:26本地launchd生成并push，ASCII文件名，raw读取带?v=日期戳；云端9:27任务读取）",
         ANCHOR_END,
     ]
     return "\n".join(L)
@@ -153,6 +154,12 @@ def git_push(msg):
                 rc, out = run(["-c", "http.version=HTTP/1.1", "push", "origin", "main"])
             if rc == 0:
                 return True, "已推送GitHub"
+            # 多窗口并发写导致 non-fast-forward：autoStash 自动暂存/恢复工作区在制品后 rebase 拉齐再重推
+            if any(k in out.lower() for k in ("non-fast-forward", "fetch first", "rejected", "behind", "integrate")):
+                rc2, out2 = run(["-c", "rebase.autoStash=true", "pull", "--rebase", "origin", "main"])
+                if rc2 != 0:
+                    return False, "rebase拉齐失败:" + out2[-200:]
+                continue
             time.sleep(3)
         return False, "push失败(已重试HTTP/1.1):" + out[-200:]
     except Exception as e:
