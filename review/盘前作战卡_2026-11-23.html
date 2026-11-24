@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11/23 盘前作战卡</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0e14; color:#e6e9ef; font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif; line-height:1.5; padding:12px; }
+  .wrap { max-width:420px; margin:0 auto; }
+  .card { background:#151a23; border:1px solid #232a38; border-radius:14px; padding:14px; margin-bottom:11px; }
+  .card h2 { font-size:14.5px; color:#38bdf8; margin-bottom:10px; }
+  .muted { color:#8b98ad; font-size:12px; }
+  .hero { background:linear-gradient(135deg,#0f2027,#151a23); border:1px solid #16384a; }
+  .hero .kicker { font-size:11.5px; color:#38bdf8; letter-spacing:1px; font-weight:600; }
+  .hero .title { font-size:20px; font-weight:800; color:#f1f5fb; margin:4px 0 2px; }
+  .ver { display:inline-block; margin-top:8px; font-size:11px; color:#fbbf24; background:#2a2113; border:1px solid #4a3a17; padding:2px 8px; border-radius:6px; font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:11.5px; }
+  th,td { padding:6px 4px; text-align:left; border-bottom:1px solid #232a38; vertical-align:top; }
+  th { color:#38bdf8; font-weight:600; font-size:10.5px; }
+  tr:last-child td { border-bottom:none; }
+  .red { color:#ff6b6b; font-weight:700; }
+  .grn { color:#34d399; font-weight:700; }
+  .gold { color:#fbbf24; font-weight:700; }
+  .cyn { color:#38bdf8; font-weight:700; }
+  .code { color:#8b98ad; font-size:10.5px; }
+  .step { display:inline-block; background:#0c2e3d; color:#38bdf8; font-size:10px; font-weight:800; padding:1px 7px; border-radius:5px; margin-right:6px; }
+  .ifthen .it { display:flex; gap:7px; font-size:12px; padding:5px 0; align-items:flex-start; }
+  .ifthen .lab { flex:0 0 auto; font-weight:700; font-size:10px; padding:1px 6px; border-radius:5px; margin-top:1px; }
+  .lab.yes { background:#163524; color:#34d399; }
+  .lab.no { background:#3b1d24; color:#f87171; }
+  .lab.mid { background:#3d2f16; color:#fbbf24; }
+  .num { display:flex; gap:6px; }
+  .num .n { flex:1; background:#11151d; border:1px solid #232a38; border-radius:9px; padding:7px 4px; text-align:center; }
+  .num .n .v { font-size:14px; font-weight:800; display:block; }
+  .num .n .l { font-size:9.5px; color:#8b98ad; margin-top:2px; display:block; }
+  .lead { font-size:12.6px; background:#11151d; border-left:3px solid #38bdf8; padding:9px 11px; border-radius:0 8px 8px 0; }
+  ul.tick { list-style:none; }
+  ul.tick li { font-size:12px; padding:4px 0 4px 16px; position:relative; color:#9fb0c8; }
+  ul.tick li::before { content:"▸"; position:absolute; left:2px; color:#38bdf8; }
+  .disc { font-size:11px; color:#6b7689; text-align:center; margin:6px 0 10px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <div class="kicker">A 股 · 短线跟随 · 盘前作战卡（v5.1）</div>
+    <div class="title">11/23 周一 · 外部冲击 vs 稳市三招</div>
+    <div class="muted">更新于 11-23 09:08 · 亚股普跌，看内部稳市资金承接力</div>
+    <div class="ver">上周五指数破位但情绪修复，今天关键是政策能否对冲外围恐慌</div>
+  </div>
+
+  <!-- 消息 -->
+  <div class="card">
+    <h2><span class="step">1</span>周末消息：多空对撞</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab no">外围</span><div><b>韩国综指暴跌4%</b>（三星−4、SK海力士−3），台股−1.1、新加坡−1；MSCI新兴市场抹去年内涨幅。商品开盘大跌：LPG−6.8、白银−4、工业硅−4；黄金上周−9%。</div></div>
+      <div class="it"><span class="lab no">杠杆</span><div>两市融资余额单日<b>大减417亿</b>，杠杆资金加速出清。</div></div>
+      <div class="it"><span class="lab yes">稳市</span><div>11-22 监管<b>三招稳市</b>：①调整融资保证金 ②创业板做市商 ③一揽子降费；<b>首批18只主动ETF今日上市，360亿增量入市</b>。</div></div>
+      <div class="it"><span class="lab yes">资金</span><div>上周 ETF 净流入 <b>1908亿</b>（宽基1895、沪深300单只385），中长期资金持续托底；AI服务器涨价最高45%，算力需求仍硬。</div></div>
+    </div>
+  </div>
+
+  <!-- 上周五盘面 -->
+  <div class="card">
+    <h2><span class="step">2</span>上周五（11-20）盘面：指数破、情绪修</h2>
+    <div class="num">
+      <div class="n"><span class="v grn">28</span><span class="l">涨停(回升)</span></div>
+      <div class="n"><span class="v grn">7</span><span class="l">炸板(大减)</span></div>
+      <div class="n"><span class="v red">58</span><span class="l">跌停</span></div>
+    </div>
+    <div style="height:7px"></div>
+    <div class="num">
+      <div class="n"><span class="v red">3533.79</span><span class="l">上证收盘(破3574)</span></div>
+      <div class="n"><span class="v red">3500.83</span><span class="l">盘中最低</span></div>
+      <div class="n"><span class="v gold">4板</span><span class="l">真视通/盛剑</span></div>
+    </div>
+    <div class="muted" style="margin-top:9px"><b>连板梯队</b>：4板 真视通（封流5.57、0炸、换手17.6放量）、盛剑（炸4）｜2板 中京电子（封流2.61、0炸、换手13）｜首板25只，PCB/元件密集。</div>
+    <div class="lead" style="margin-top:8px">真视通继续放量换手封4板，闽发模式强势延续，但已是高位，<b>只作情绪风向标，不追</b>。指数跌、个股情绪反而修复，资金抱团高标＋PCB。</div>
+  </div>
+
+  <!-- 今日研判 -->
+  <div class="card">
+    <h2><span class="step">3</span>今日研判：开盘定强弱</h2>
+    <div class="lead">外围大跌＋稳市三招同日落地，今天是<b class="cyn">外部恐慌与内部稳市资金的正面博弈</b>。不预设多空，看竞价和开盘承接：稳市资金能否对冲亚股拖累、跌停是否收敛、量能是否放大。</div>
+    <div class="ifthen" style="margin-top:8px">
+      <div class="it"><span class="lab yes">强信号</span><div>低开后快速收回、跌停不扩散、PCB/算力放量反包——稳市生效，按计划出手。</div></div>
+      <div class="it"><span class="lab no">弱信号</span><div>跟随亚股低开低走、跌停放大、无承接、宽基ETF也托不住——空仓等企稳，不抢反弹。</div></div>
+    </div>
+  </div>
+
+  <!-- 候选与买点 -->
+  <div class="card">
+    <h2><span class="step">4</span>候选与买点（四买点动态择优）</h2>
+    <table>
+      <tr><th>买点</th><th>标的</th><th>依据</th></tr>
+      <tr><td>买点1<br>一进二</td><td><b>澳弘电子</b><br><span class="code">605058</span><br>收42.92</td><td class="grn">首选：干净（五年零处罚）、0炸、封流1.40、换手8.7，PCB含AI算力/汽车/卫星</td></tr>
+      <tr><td>买点1<br>备选</td><td>骏亚科技<br><span class="code">603386</span><br>收14.59</td><td style="color:#fbbf24">PCB，0炸封流1.31，但有重组信披警示＋环保处罚瑕疵，次选</td></tr>
+      <tr><td>买点4<br>二进三</td><td><b>中京电子</b><br><span class="code">002579</span><br>收13.39</td><td class="grn">干净，只做盘中开板分歧转一致回封，不追一字</td></tr>
+    </table>
+    <div class="muted" style="margin-top:8px"><b class="red">剔除</b>：满坤/凡拓/易天（301/300创业板）、超声（换手20偏高、110亿）、华微（炸4、封流0.73）；真视通4板只看不动。</div>
+  </div>
+
+  <!-- 信号卡 -->
+  <div class="card">
+    <h2><span class="step">5</span>可挂单信号卡</h2>
+    <table>
+      <tr><th>标的</th><th>高开2-5%买点</th><th>止损(−3%)</th><th>风险(100股)</th></tr>
+      <tr><td><b>澳弘电子</b><br><span class="code">605058</span></td><td>43.78–45.07</td><td class="grn">买入价×0.97</td><td class="gold">约129元</td></tr>
+      <tr><td><b>骏亚科技</b><br><span class="code">603386</span></td><td>14.88–15.32</td><td class="grn">14.15</td><td class="gold">约44元</td></tr>
+      <tr><td><b>中京电子</b><br><span class="code">002579</span></td><td>回封瞬间扫</td><td class="grn">12.99</td><td class="gold">≤250</td></tr>
+    </table>
+    <div class="muted" style="margin-top:8px">100股、一次一只、不补仓；高开2-5%须放量＋回踩不破均价；一字/高开>8%不追；澳弘价高，100股约4400元，占本金约1/3，合规。</div>
+  </div>
+
+  <!-- 剧本 -->
+  <div class="card">
+    <h2><span class="step">6</span>盘中 if-then 剧本</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">强</span><div>9:25竞价稳、低开高走＋跌停收敛：9:30-9:45 打澳弘（首选）；中京若开板健康回封可按买点4，一次一只。</div></div>
+      <div class="it"><span class="lab mid">震荡</span><div>指数弱但PCB/算力有承接、个股放量封板：只打封单最实的一只，否则空仓。</div></div>
+      <div class="it"><span class="lab no">弱</span><div>跟随亚股杀、跌停扩散、破位无承接：<b>空仓等企稳，不接飞刀、不追高</b>。</div></div>
+    </div>
+    <ul class="tick" style="margin-top:7px">
+      <li>9:27 竞价警戒定方向；9:35 看开盘第一波；10:30 验证跌停收敛＋放量。</li>
+      <li>午后不追高，只持确认票；一次一只，成交即关闭其他买点。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><span class="step">铁</span>铁律校验</h2>
+    <ul class="tick">
+      <li>不以今天定义明天，外围利空只给条件，资金选择才是答案。</li>
+      <li>全景扫描后聚焦，不被真视通/单一板块锚定，谁强跟谁。</li>
+      <li>不追高位一字、不打买不进的票；无合格信号就空仓。</li>
+      <li>风险≤250、100股、不补仓、硬止损−3%。</li>
+    </ul>
+  </div>
+
+  <div class="disc">仅为投研方法与信息整理，不构成投资建议；逐笔封单以券商 APP 为准，盘中以实时资金与承接确认，据此操作盈亏自负。</div>
+
+</div>
+</body>
+</html>

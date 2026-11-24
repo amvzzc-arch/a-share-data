@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11/19 九步深度复盘（联合 11-18）</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0e14; color:#e6e9ef; font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif; line-height:1.5; padding:12px; }
+  .wrap { max-width:420px; margin:0 auto; }
+  .card { background:#151a23; border:1px solid #232a38; border-radius:14px; padding:14px; margin-bottom:11px; }
+  .card h2 { font-size:14.5px; color:#38bdf8; margin-bottom:10px; }
+  .muted { color:#8b98ad; font-size:12px; }
+  .hero { background:linear-gradient(135deg,#0f2027,#151a23); border:1px solid #16384a; }
+  .hero .kicker { font-size:11.5px; color:#38bdf8; letter-spacing:1px; font-weight:600; }
+  .hero .title { font-size:20px; font-weight:800; color:#f1f5fb; margin:4px 0 2px; }
+  .ver { display:inline-block; margin-top:8px; font-size:11px; color:#fbbf24; background:#2a2113; border:1px solid #4a3a17; padding:2px 8px; border-radius:6px; font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:11.5px; }
+  th,td { padding:6px 4px; text-align:left; border-bottom:1px solid #232a38; vertical-align:top; }
+  th { color:#38bdf8; font-weight:600; font-size:10.5px; }
+  tr:last-child td { border-bottom:none; }
+  .red { color:#ff6b6b; font-weight:700; }
+  .grn { color:#34d399; font-weight:700; }
+  .gold { color:#fbbf24; font-weight:700; }
+  .cyn { color:#38bdf8; font-weight:700; }
+  .code { color:#8b98ad; font-size:10.5px; }
+  .step { display:inline-block; background:#0c2e3d; color:#38bdf8; font-size:10px; font-weight:800; padding:1px 7px; border-radius:5px; margin-right:6px; }
+  .ifthen .it { display:flex; gap:7px; font-size:12px; padding:5px 0; align-items:flex-start; }
+  .ifthen .lab { flex:0 0 auto; font-weight:700; font-size:10px; padding:1px 6px; border-radius:5px; margin-top:1px; }
+  .lab.yes { background:#163524; color:#34d399; }
+  .lab.no { background:#3b1d24; color:#f87171; }
+  .lab.mid { background:#3d2f16; color:#fbbf24; }
+  .num { display:flex; gap:6px; }
+  .num .n { flex:1; background:#11151d; border:1px solid #232a38; border-radius:9px; padding:7px 4px; text-align:center; }
+  .num .n .v { font-size:14px; font-weight:800; display:block; }
+  .num .n .l { font-size:9.5px; color:#8b98ad; margin-top:2px; display:block; }
+  .tl { position:relative; padding-left:16px; }
+  .tl::before { content:""; position:absolute; left:4px; top:5px; bottom:5px; width:2px; background:#232a38; }
+  .tl .t-item { position:relative; padding:6px 0; font-size:12.3px; }
+  .tl .t-item::before { content:""; position:absolute; left:-16px; top:11px; width:9px; height:9px; border-radius:50%; background:#38bdf8; border:2px solid #0b0e14; }
+  .tl .t-item .t-t { font-weight:700; color:#cbd5e3; font-size:12px; }
+  .tl .t-item .t-d { color:#9fb0c8; font-size:12px; }
+  .lead { font-size:12.6px; background:#11151d; border-left:3px solid #38bdf8; padding:9px 11px; border-radius:0 8px 8px 0; }
+  ul.tick { list-style:none; }
+  ul.tick li { font-size:12px; padding:4px 0 4px 16px; position:relative; color:#9fb0c8; }
+  ul.tick li::before { content:"▸"; position:absolute; left:2px; color:#38bdf8; }
+  .disc { font-size:11px; color:#6b7689; text-align:center; margin:6px 0 10px; line-height:1.6; }
+  .daytag { font-size:10px; font-weight:700; padding:1px 6px; border-radius:5px; }
+  .d18 { background:#1d2b3a; color:#7dd3fc; }
+  .d19 { background:#3a1d2b; color:#f9a8d4; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <div class="kicker">A 股 · 短线跟随 · 九步深度复盘（联合两日）</div>
+    <div class="title">11/19 周四 · 退潮中的高低切</div>
+    <div class="muted">更新于 11-19 23:20 · 联合 11-18 复盘 · 预演 11-20 周五</div>
+    <div class="ver">资金没离场，从下游算力切向上游半导体；真视通闽发模式连续两天验证</div>
+  </div>
+
+  <!-- 1 消息 -->
+  <div class="card">
+    <h2><span class="step">1</span>消息扫描：利好兑现＋新变量</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">英伟达</span><div>财报<b>全面超预期</b>：Q3 营收 1158 亿（+103%，预期 1093）、数据中心 1076 亿（+110%）、Q4 指引 1300 亿、Vera Rubin 量产超预期。但 A 股算力 11-18 分化、11-19 芯片重挫——<b>利好兑现＋获利了结</b>，不是逻辑破坏。</div></div>
+      <div class="it"><span class="lab mid">新变量</span><div><b>Anthropic 纳斯达克 IPO</b>：发行价 83、开盘指示 +20%、募资约 800 亿、散户配售 15%。AI 情绪强心针，但巨型 IPO 或分流现有 AI 资金。</div></div>
+      <div class="it"><span class="lab yes">外围</span><div>英特尔 +8%、拼多多 +13%；夜盘<b>焦炭 +4.12%、焦煤 +3.93%、铁矿 +2.24%</b>，黑色系资源线反弹，留意资源/周期联动。</div></div>
+      <div class="it"><span class="lab no">地缘/资金</span><div>胡塞袭击利雅得金融中心（无伤亡）；深市年内回购上限 1707 亿；SpaceX 发 320 亿 AI 芯片债。</div></div>
+    </div>
+  </div>
+
+  <!-- 2 数据 -->
+  <div class="card">
+    <h2><span class="step">2</span>全市场数据：两天连退，量能年内新低</h2>
+    <table>
+      <tr><th>指标</th><th><span class="daytag d18">11-18</span></th><th><span class="daytag d19">11-19</span></th></tr>
+      <tr><td>涨停</td><td>41</td><td class="red">23（年内新低）</td></tr>
+      <tr><td>炸板 / 跌停</td><td>24 / 40</td><td class="red">24 / 68（口径83）</td></tr>
+      <tr><td>封板率</td><td>63.1%</td><td class="red">48.9%</td></tr>
+      <tr><td>成交额</td><td>1.37万亿</td><td class="red">1.31万亿（年内新低）</td></tr>
+    </table>
+    <div style="height:8px"></div>
+    <div class="num">
+      <div class="n"><span class="v red">9%</span><span class="l">晋级率 11-17</span></div>
+      <div class="n"><span class="v gold">16.7%</span><span class="l">晋级率 11-18</span></div>
+      <div class="n"><span class="v grn">37.5%</span><span class="l">晋级率 11-19</span></div>
+    </div>
+    <div style="margin-top:9px; background:#11151d; border:1px solid #232a38; border-radius:9px; padding:9px 10px;">
+      <div style="font-size:12px; margin-bottom:7px;"><b>11-18 涨停在 11-19 溢价（40只）</b> <span class="gold">均 +0.27%</span> <span class="muted">中位 −0.47% · 红盘47.5%</span></div>
+      <div class="num">
+        <div class="n"><span class="v red">−0.70%</span><span class="l">首板均溢价(32)</span></div>
+        <div class="n"><span class="v grn">+4.17%</span><span class="l">连板均溢价(8)</span></div>
+        <div class="n"><span class="v" style="color:#cbd5e3">15%</span><span class="l">再涨停</span></div>
+      </div>
+    </div>
+    <div class="muted" style="margin-top:9px"><b>连板梯队（11-19）</b>：3板 真视通（一字）/全筑/盛剑｜2板 华升（炸3）/京蓝（炸1）｜首板 23 只。连续 6 天超 4100 只下跌，指数三天盘中破 3574 但收盘均收回。</div>
+  </div>
+
+  <!-- 3 五维 -->
+  <div class="card">
+    <h2><span class="step">3</span>五维框架（齐才出结论）</h2>
+    <table>
+      <tr><th>维度</th><th>判定</th></tr>
+      <tr><td><b>量能</b></td><td>1.31 万亿年内新低，抛压衰竭但无增量，存量博弈</td></tr>
+      <tr><td><b>情绪节奏</b></td><td class="red">涨停23、跌停68、封板率48.9%，系统性退潮；但晋级率逆势升至37.5%，高标抱团未散</td></tr>
+      <tr><td><b>资金流向</b></td><td class="grn">主力净流出233.5亿，计算机流出40+，但切向上游半导体（设备/晶圆/光刻胶/存储/封装），高低切非离场</td></tr>
+      <tr><td><b>筹码</b></td><td>真视通一字实封缩量；虚封炸板多（九阳炸13、中嘉炸12、襄阳炸9）</td></tr>
+      <tr><td><b>消息</b></td><td>英伟达利好兑现＋Anthropic IPO，判定权交竞价资金</td></tr>
+    </table>
+    <div class="lead" style="margin-top:9px">这不是单边崩盘，而是<b class="cyn">主线内部的高低切＋旧方向出清</b>：下游算力应用/芯片资金撤出，上游材料设备大票（中芯+11、中微+7.5、华虹+6.8）逆势吸金，新主线在退潮里悄悄卡位。</div>
+  </div>
+
+  <!-- 4 龙头换挡 -->
+  <div class="card">
+    <h2><span class="step">4</span>情绪龙头：高标换挡，新旗手在上游</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab no">旧高标倒</span><div>华东重机 4进5 失败（炸3、巨量换手51.3%）；华胜天成高开低走（盘中 +9.4%、收 −0.71%），中军走弱。</div></div>
+      <div class="it"><span class="lab mid">风向标</span><div><b>真视通 3 板（一字、封流8.02、0炸、换手2.4）</b>，已从换手先锋变成一字高标，<b>一进二买点已过</b>，只作情绪锚，不追。</div></div>
+      <div class="it"><span class="lab yes">新方向</span><div>上游半导体由大票领涨（中芯/中微/华虹/长川），光刻胶 +7.72、存储 +44、先进封装 +30 亿；但<b>连板小票尚未打出新龙头</b>，正处在选先锋的窗口。</div></div>
+    </div>
+    <div class="lead" style="margin-top:8px">换挡路径清晰：<b>下游算力应用/芯片 → 上游材料/设备/光刻胶/先进封装/存储</b>。明天看上游能否从大票走强扩散到小票连板，谁先放量换手封板，谁就是新方向的弹性先锋。</div>
+  </div>
+
+  <!-- 5 预期差 -->
+  <div class="card">
+    <h2><span class="step">5</span>预期差：恐慌 vs 资金真实去向</h2>
+    <div class="muted" style="margin-bottom:6px"><b class="red">共识</b>：跌停68、系统性退潮、多看少动、等企稳。</div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">真①</span><div>资金<b>没离场而是高低切</b>：光刻胶、存储、先进封装、晶圆制造全线大额净流入，这是新主线孕育而非全面失血。</div></div>
+      <div class="it"><span class="lab yes">真②</span><div>晋级率逆势 9%→37.5%，高标抱团未散；上证50连续尾盘探底回升，3574/3547 反复收回，下方有承接。</div></div>
+      <div class="it"><span class="lab no">风险</span><div><b>首板次日平均 −0.70%</b>，退潮期乱打一进二就是亏钱，必须卡上游方向＋实封＋充分换手，宁缺毋滥。</div></div>
+    </div>
+  </div>
+
+  <!-- 盘感验证 -->
+  <div class="card">
+    <h2><span class="step">核</span>你的判断：两天实盘验证对错</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">闽发模式</span><div>真视通完整复刻——11-17 首板（换手6.7）→11-18 放量换手2板（换手7.9）→11-19 <b>一字缩量3板（换手2.4）</b>，"分歧转一致→缩量加速"判断<b>完全正确</b>。</div></div>
+      <div class="it"><span class="lab yes">高低切</span><div>你担心的"科技午后顶不住"属实，但资金没走，切到了更上游的设备/材料/光刻胶，<b>国产替代＋自主可控主线判断对</b>。</div></div>
+      <div class="it"><span class="lab mid">3574</span><div>三天盘中破、收盘收回＋上证50尾盘回升，支撑有效；"神秘资金"仍不可证，可验证的是 ETF＋主力资金。"修复非反转"维持。</div></div>
+      <div class="it"><span class="lab no">九阳</span><div>11-19 再地天板（炸13、封流0.27、换手23.7、流通237.7），<b>超200亿不能做＋封流极弱</b>，高波动抱团票，只看不动。"二波穿越龙"无法用封单证实。</div></div>
+    </div>
+  </div>
+
+  <!-- 候选PK -->
+  <div class="card">
+    <h2><span class="step">PK</span>明天一进二候选：三佳 vs 中京</h2>
+    <table>
+      <tr><th>标的</th><th>封流%</th><th>炸</th><th>换手</th><th>流通亿</th><th>题材</th><th>定性</th></tr>
+      <tr><td><b>三佳科技</b><br><span class="code">600520</span></td><td class="gold">1.63</td><td class="grn">0</td><td>7.1</td><td class="gold">35.1</td><td>半导体封装设备</td><td class="gold">首选</td></tr>
+      <tr><td><b>中京电子</b><br><span class="code">002579</span></td><td>1.42</td><td class="grn">0</td><td class="grn">13.3</td><td>71.0</td><td>PCB/数据中心</td><td class="gold">备选</td></tr>
+      <tr><td>格林达<br><span class="code">603931</span></td><td>1.45</td><td style="color:#f87171">1</td><td style="color:#f87171">3.1</td><td>58.2</td><td>显影液</td><td style="color:#fbbf24">观察</td></tr>
+      <tr><td>江化微<br><span class="code">603078</span></td><td style="color:#f87171">0.81</td><td class="grn">0</td><td>12.8</td><td style="color:#f87171">103.6</td><td>电子化学</td><td style="color:#f87171">封流弱/盘大</td></tr>
+    </table>
+    <div class="ifthen" style="margin-top:8px">
+      <div class="it"><span class="lab yes">三佳</span><div>原文一科技，2025年合肥产投国资入主。<b>纯正半导体封装设备/模具（打破日本垄断）</b>，收购众合半导体、导入 ST/UNISEM，先进封装自主可控正卡主线；0炸、封流实、小盘弹性大、干净。</div></div>
+      <div class="it"><span class="lab yes">中京</span><div>近五年零处罚零监管，最干净；换手13.3最充分，PCB 用于数据中心/算力配套；题材纯度略低于三佳，故作备选。</div></div>
+      <div class="it"><span class="lab no">剔除</span><div>蓝箭电子（301创业板非主板）、兴欣新材（流通14.6低于20）、大港/红宝丽（警示函＋资金占用污点）、毅昌（一字进不去）、襄阳（炸9分歧大）。</div></div>
+    </div>
+  </div>
+
+  <!-- 6 看A做B -->
+  <div class="card">
+    <h2><span class="step">6</span>看 A 做 B（B 过三关＋防雷）</h2>
+    <ul class="tick">
+      <li><b>板块内</b>：真视通一字进不去、华胜走弱 → 上游半导体低位首板，封单实、可换手的 <b>三佳科技 600520</b>。</li>
+      <li><b>板块间</b>：下游算力/应用/小家电退潮 → 上游材料/设备/封装/光刻胶/存储。</li>
+      <li><b>三关＋防雷</b>：三佳、中京均主板、价≤48、流通20-200亿，净资产正、无造假无立案。</li>
+    </ul>
+    <div class="muted" style="margin-top:7px"><b class="red">规避</b>：西陇（造假/账户冻结）、紫竹（虚增）、林州（黑名单）、九阳（237亿）、大港/红宝丽（诚信污点）。</div>
+  </div>
+
+  <!-- 7 剧本 -->
+  <div class="card">
+    <h2><span class="step">7</span>明日剧本写死（11-20 周五 · 零临时决策）</h2>
+    <div class="tl">
+      <div class="t-item"><div class="t-t">9:25 竞价五道筛</div><div class="t-d">看真视通是否继续一字（情绪锚）、上游半导体梯队、三佳/中京高开幅度（3-5%为佳）、竞价量能、指数是否守 3574。</div></div>
+      <div class="t-item"><div class="t-t">9:30-9:45 打板窗口</div><div class="t-d">三佳/中京高开3-5%放量上板、封单实、上游梯队配合则打；午后不做。</div></div>
+    </div>
+    <div class="ifthen" style="margin-top:8px">
+      <div class="it"><span class="lab yes">强</span><div>真视通继续一字＋上游扩散连板：情绪在线，执行三佳（首选）或中京，100股。</div></div>
+      <div class="it"><span class="lab mid">震荡</span><div>真视通开板但上游有承接、三佳放量换手封板：只打确认最实的一只，否则空仓。</div></div>
+      <div class="it"><span class="lab no">弱</span><div>真视通补跌＋指数破 3547 无承接、上游小票炸板：<b>空仓等企稳，不抢反弹</b>。</div></div>
+    </div>
+    <div class="lead" style="margin-top:8px"><b>周五特殊性</b>：周末效应资金偏谨慎，封板更看决心；首板亏钱效应下，宁可错过不可做错，没有过三关的票就空仓。</div>
+  </div>
+
+  <!-- 8 信号卡 -->
+  <div class="card">
+    <h2><span class="step">8</span>可挂单信号卡</h2>
+    <table>
+      <tr><th>标的</th><th>高开2-5%买点</th><th>止损/低开企稳</th><th>风险(100股)</th></tr>
+      <tr>
+        <td><b>三佳科技</b><br><span class="code">600520</span><br>收22.17</td>
+        <td>22.61<br>–23.28</td>
+        <td class="grn">止损21.50<br>企稳21.73</td>
+        <td class="gold">111–177元</td>
+      </tr>
+      <tr>
+        <td><b>中京电子</b><br><span class="code">002579</span><br>收12.17</td>
+        <td>12.41<br>–12.78</td>
+        <td class="grn">止损11.80<br>企稳11.93</td>
+        <td class="gold">≤97元</td>
+      </tr>
+    </table>
+    <div class="muted" style="margin-top:8px">100股、一次一只、永不补仓；高开2-5%黄金区间，须放量＋回踩不破均价；一字/&gt;8%不追；硬止损 −3%，单笔风险均 ≤250。</div>
+  </div>
+
+  <!-- 9 铁律 + 漏洞审计 -->
+  <div class="card">
+    <h2><span class="step">9</span>铁律校验＋体系漏洞审计</h2>
+    <ul class="tick">
+      <li>不以今天定义明天——退潮只给赔率，转强待竞价确认。</li>
+      <li>全景扫描后聚焦上游，不盯真视通一只、不追一字高标。</li>
+      <li>首板亏钱效应下，一进二提高门槛：方向对＋实封＋换手，缺一不做。</li>
+      <li>周五控仓、风险≤250，没有合格标的就空仓。</li>
+    </ul>
+    <div class="lead" style="margin-top:9px; border-left-color:#fbbf24">
+      <b class="gold">漏洞提示（需你拍板）</b>：当前数据显示<b>连板溢价 +4.17% 而首板 −0.70%</b>，与"只做一进二、不追高"的模式存在环境冲突——退潮期一进二天然吃亏。<b>建议不是去追高标，而是在退潮期主动降低出手频率、只打上游主线的实封换手板</b>，等情绪回暖、首板溢价转正后再恢复常态频率。此条是否写入体系，由你定。
+    </div>
+  </div>
+
+  <div class="disc">仅为投研方法与信息整理，不构成投资建议；涨停/跌停各口径略有差异已标注；逐笔封单以券商 APP 为准，盘中以实时资金与承接确认。</div>
+
+</div>
+</body>
+</html>

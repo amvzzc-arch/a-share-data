@@ -61,13 +61,28 @@ def roll_day(st):
     return st
 
 
+def normalize_positions(st):
+    """老版单票 position 迁移为 positions 数组；position 保留为兼容主仓（第一只）。"""
+    positions = st.get("positions")
+    if not isinstance(positions, list):
+        old = st.get("position")
+        positions = [old] if isinstance(old, dict) else []
+    st["positions"] = positions
+    st["position"] = positions[0] if positions else None
+    return st
+
+
 def render_md(st):
-    pos = st.get("position")
-    if pos:
-        pos_line = (f"{pos['name']} {pos['code']}｜{pos['shares']}股｜成本{pos['price']:.2f}"
-                    f"｜风险档{pos.get('risk','')}｜止损{pos.get('stop','')}"
-                    f"｜买入{pos.get('time','')}｜{pos.get('note','')}")
-        pos_status = "持仓中"
+    positions = st.get("positions", [])
+    if positions:
+        pos_lines = []
+        for pos in positions:
+            pos_lines.append(
+                f"{pos['name']} {pos['code']}｜{pos['shares']}股｜成本{pos['price']:.2f}"
+                f"｜风险档{pos.get('risk','')}｜止损{pos.get('stop','')}"
+                f"｜买入{pos.get('time','')}｜{pos.get('note','')}")
+        pos_line = "；".join(pos_lines)
+        pos_status = f"持仓中（{len(positions)}只）"
     else:
         pos_line = "空仓"
         pos_status = "空仓"
@@ -177,34 +192,51 @@ def main():
     ap.add_argument("--dry", action="store_true"); ap.add_argument("--no-push", action="store_true")
     a = ap.parse_args()
 
-    st = roll_day(load_state())
+    st = normalize_positions(roll_day(load_state()))
     t = now().strftime("%H:%M")
     msg = ""
 
     if a.action == "buy":
         if not (a.code and a.name and a.shares and a.price):
             print("❌ buy 需要 --code --name --shares --price"); sys.exit(1)
-        st["position"] = {
+        positions = st.get("positions", [])
+        if any(str(p.get("code")) == str(a.code) for p in positions):
+            print(f"⚠️ {a.code} 已在持仓中，禁止重复补记；如需调整请先 sell")
+            sys.exit(1)
+        new_pos = {
             "name": a.name, "code": a.code, "shares": a.shares, "price": a.price,
             "risk": a.risk or "常规", "stop": a.stop if a.stop is not None else "",
             "time": a.time or t, "note": a.note or "",
         }
+        positions.append(new_pos)
+        st["positions"] = positions
+        st["position"] = positions[0]
         if a.cash:
             st["cash"] = a.cash
+        record_time = a.time or t
+        suffix = "（补记）" if a.time and a.time != t else ""
         st["windows"][st["date"]].append(
-            f"{t} 买入{a.name}({a.code}) {a.shares}股@{a.price} 风险档{a.risk or '常规'} 止损{a.stop}")
+            f"{record_time} 买入{a.name}({a.code}) {a.shares}股@{a.price} 风险档{a.risk or '常规'} 止损{a.stop}{suffix}")
         msg = f"{st['date']} 买入{a.name}{a.code} {a.shares}股@{a.price}"
 
     elif a.action == "sell":
+        positions = st.get("positions", [])
         pos = st.get("position")
-        nm = pos["name"] if pos else (a.name or a.code)
+        code = a.code or (pos and pos.get("code"))
+        target = next((p for p in positions if str(p.get("code")) == str(code)), None)
+        nm = target["name"] if target else (a.name or code)
         st["windows"][st["date"]].append(
-            f"{t} 卖出{nm}({a.code or (pos and pos['code'])})"
+            f"{t} 卖出{nm}({code})"
             + (f"@{a.price}" if a.price is not None else ""))
-        st["position"] = None
+        positions = [p for p in positions if str(p.get("code")) != str(code)]
+        st["positions"] = positions
+        st["position"] = positions[0] if positions else None
         if a.cash:
             st["cash"] = a.cash
-        msg = f"{st['date']} 卖出{nm} 回到空仓"
+        if positions:
+            msg = f"{st['date']} 卖出{nm} 剩余{len(positions)}只"
+        else:
+            msg = f"{st['date']} 卖出{nm} 回到空仓"
 
     elif a.action in ("mood", "cash", "fuse", "tomorrow", "version"):
         key = {"mood": "mood", "cash": "cash", "fuse": "fuse",

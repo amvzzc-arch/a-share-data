@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11/16 九步深度复盘</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0e14; color:#e6e9ef; font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif; line-height:1.5; padding:12px; }
+  .wrap { max-width:420px; margin:0 auto; }
+  .card { background:#151a23; border:1px solid #232a38; border-radius:14px; padding:14px; margin-bottom:11px; }
+  .card h2 { font-size:14.5px; color:#c4b5fd; margin-bottom:10px; }
+  .muted { color:#8b98ad; font-size:12px; }
+  .sub { font-size:12.5px; color:#9fb0c8; }
+  .hero { background:linear-gradient(135deg,#1c1622,#151a23); border:1px solid #3a2a44; }
+  .hero .kicker { font-size:11.5px; color:#c4b5fd; letter-spacing:1px; font-weight:600; }
+  .hero .title { font-size:21px; font-weight:800; color:#f1f5fb; margin:4px 0 2px; }
+  .ver { display:inline-block; margin-top:8px; font-size:11px; color:#fbbf24; background:#2a2113; border:1px solid #4a3a17; padding:2px 8px; border-radius:6px; font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:11.5px; }
+  th,td { padding:6px 4px; text-align:left; border-bottom:1px solid #232a38; vertical-align:top; }
+  th { color:#c4b5fd; font-weight:600; font-size:10.5px; }
+  tr:last-child td { border-bottom:none; }
+  .red { color:#ff6b6b; font-weight:700; }
+  .grn { color:#34d399; font-weight:700; }
+  .gold { color:#fbbf24; font-weight:700; }
+  .pur { color:#c4b5fd; font-weight:700; }
+  .code { color:#8b98ad; font-size:10.5px; }
+  .step { display:inline-block; background:#2a2140; color:#c4b5fd; font-size:10px; font-weight:800; padding:1px 7px; border-radius:5px; margin-right:6px; }
+  .ifthen .it { display:flex; gap:7px; font-size:12px; padding:5px 0; align-items:flex-start; }
+  .ifthen .lab { flex:0 0 auto; font-weight:700; font-size:10px; padding:1px 6px; border-radius:5px; margin-top:1px; }
+  .lab.yes { background:#163524; color:#34d399; }
+  .lab.no { background:#3b1d24; color:#f87171; }
+  .lab.mid { background:#3d2f16; color:#fbbf24; }
+  .num { display:flex; gap:6px; flex-wrap:wrap; }
+  .num .n { flex:1 1 30%; background:#11151d; border:1px solid #232a38; border-radius:9px; padding:7px 4px; text-align:center; }
+  .num .n .v { font-size:15px; font-weight:800; display:block; }
+  .num .n .l { font-size:9.5px; color:#8b98ad; margin-top:2px; display:block; }
+  .tl { position:relative; padding-left:16px; }
+  .tl::before { content:""; position:absolute; left:4px; top:5px; bottom:5px; width:2px; background:#232a38; }
+  .tl .t-item { position:relative; padding:6px 0; font-size:12.3px; }
+  .tl .t-item::before { content:""; position:absolute; left:-16px; top:11px; width:9px; height:9px; border-radius:50%; background:#c4b5fd; border:2px solid #0b0e14; }
+  .tl .t-item .t-t { font-weight:700; color:#cbd5e3; font-size:12px; }
+  .tl .t-item .t-d { color:#9fb0c8; font-size:12px; }
+  .disc { font-size:11px; color:#6b7689; text-align:center; margin:6px 0 10px; line-height:1.6; }
+  .lead { font-size:12.8px; color:#e6e9ef; background:#11151d; border-left:3px solid #c4b5fd; padding:9px 11px; border-radius:0 8px 8px 0; }
+  ul.tick { list-style:none; }
+  ul.tick li { font-size:12px; padding:4px 0 4px 16px; position:relative; color:#9fb0c8; }
+  ul.tick li::before { content:"▸"; position:absolute; left:2px; color:#c4b5fd; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <div class="kicker">A 股 · 短线跟随 · 九步深度复盘</div>
+    <div class="title">11/16 周一 · 冰点换挡</div>
+    <div class="muted">2026-11-16 23:30 · 沪深主板 · 一进二 · 九步闭环</div>
+    <div class="ver">体系 v5.1 · 不预设反转，只等竞价确认</div>
+  </div>
+
+  <!-- 步骤1 消息扫描 -->
+  <div class="card">
+    <h2><span class="step">1</span>消息扫描：夜间三利空压顶</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab no">芯片</span><div>美股纳指 <b>−2.00%</b>、费半 <b>−5.02%</b>；美光 −6.7%、英特尔 −6.3%、台积电 −4.8%、英伟达 −2.7%，VIX 升至 21.1。</div></div>
+      <div class="it"><span class="lab no">算力</span><div>SemiAnalysis 下修 2028 AI 资本开支近 30%、硅片出货 −17%；大摩称大客户英伟达采购占比降至 39%。</div></div>
+      <div class="it"><span class="lab no">加息</span><div>12 月加息概率约 90%、1 月加 50bp 概率 68.8%；NAND 现货跌 20%。</div></div>
+      <div class="it"><span class="lab no">龙头</span><div><b>文投控股 600715 自曝 AI 漫剧收入仅占 2.57%、面临 *ST 风险</b>，龙虎榜净卖出超 5 亿；360 市场负责人被带走；九阳尾盘炸板。</div></div>
+    </div>
+    <div class="muted" style="margin-top:8px"><b class="gold">明日事件</b>：APEC 工商峰会（深圳）、光伏储能大会（17-20）开幕；英伟达财报周三凌晨；周四美联储纪要＋Anthropic 上市；周五 LPR。</div>
+  </div>
+
+  <!-- 步骤2 全市场数据 -->
+  <div class="card">
+    <h2><span class="step">2</span>全市场数据：封单普遍虚</h2>
+    <div class="num">
+      <div class="n"><span class="v gold">32</span><span class="l">涨停（东财池）</span></div>
+      <div class="n"><span class="v red">16</span><span class="l">炸板 · 封板率67%</span></div>
+      <div class="n"><span class="v red">60</span><span class="l">跌停（63-68口径）</span></div>
+    </div>
+    <div style="height:7px"></div>
+    <div class="num">
+      <div class="n"><span class="v" style="color:#cbd5e3">1.48万亿</span><span class="l">缩量 1712 亿</span></div>
+      <div class="n"><span class="v red">4344</span><span class="l">下跌 · 热度19</span></div>
+      <div class="n"><span class="v grn">+0.85%</span><span class="l">昨涨停今溢价</span></div>
+    </div>
+    <div class="muted" style="margin-top:9px"><b>连板梯队</b>：4 板北纬｜3 板广百、国统｜2 板 9 只（文投/凯撒/金逸/金新农等）｜首板 21 只。</div>
+    <div class="lead" style="margin-top:8px">封单/流通比多 &lt;2%：高度板北纬 0.7%（炸7次）、文投 0.3%（炸8次）。<b class="grn">封单实＋0 炸板</b>：广百 3.7%、吉视 1.37亿、紫竹 1.6%、顺钠 0.96亿、野马。</div>
+  </div>
+
+  <!-- 步骤3 五维框架 -->
+  <div class="card">
+    <h2><span class="step">3</span>五维框架（齐才出结论）</h2>
+    <table>
+      <tr><th>维度</th><th>判定</th></tr>
+      <tr><td><b>量能</b></td><td>缩量阴跌（非放量恐慌），抛压衰竭但无增量承接</td></tr>
+      <tr><td><b>情绪节奏</b></td><td class="gold">冰点/退潮末期，非多杀多加速</td></tr>
+      <tr><td><b>资金流向</b></td><td>活水在交运/食饮/红利＋缩容抱团低价小盘</td></tr>
+      <tr><td><b>筹码</b></td><td>封单普遍虚、被动封多；只认 0 炸板实封</td></tr>
+      <tr><td><b>消息</b></td><td>偏空，判定权交明日竞价资金</td></tr>
+    </table>
+    <div class="lead" style="margin-top:9px">五维结论：冰点＋抛压衰竭＋有逆势活口，继续深杀空间有限，但<b>不是立即 V 反的充分条件</b>。只在低位、实封、有梯队处等启动确认。</div>
+  </div>
+
+  <!-- 步骤4 情绪龙头换挡 -->
+  <div class="card">
+    <h2><span class="step">4</span>情绪龙头：旧龙退位、新龙未立</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab no">退位</span><div><b>文投</b>（炸8次＋*ST＋龙虎榜出逃）、<b>北纬</b>（炸7次＋封单0.7%＋席位卖8523万、PE620 伪机器人）、<b>九阳</b>（炸7次未封住）——均现退位信号。</div></div>
+      <div class="it"><span class="lab yes">候选</span><div><b>广百</b>（3板、封单最实 3.7%、0炸板）是接力高标但题材偏独立；<b>固态电池</b>（政策＋大会＋实封）最可能出新龙。</div></div>
+    </div>
+    <div class="lead" style="margin-top:8px">当前是<b>换挡真空期</b>。等明日竞价确认：固态电池弱转强则新龙登基；若高标集体核按钮、新方向不接力，则高度继续下移，不预设立场。</div>
+  </div>
+
+  <!-- 步骤5 预期差 -->
+  <div class="card">
+    <h2><span class="step">5</span>预期差：共识 vs 真预期差</h2>
+    <div class="muted" style="margin-bottom:6px"><b class="red">共识（人人在说）</b>：超跌反弹/技术反抽、等英伟达财报利空出尽、还在寻底多看少动。</div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">真①</span><div>换挡新方向（固态电池）被文投/北纬的崩塌恐慌掩盖，低位登基赔率未被定价。</div></div>
+      <div class="it"><span class="lab yes">真②</span><div>实封票（广百/吉视/顺钠）在"板都很虚"的恐慌中被错杀，次日溢价确定性更高。</div></div>
+      <div class="it"><span class="lab yes">真③</span><div>北方华创逆势净买入 4.72 亿——海外算力利空下，资金或切国产替代，分化未被定价。</div></div>
+    </div>
+  </div>
+
+  <!-- 步骤6 看A做B三链 -->
+  <div class="card">
+    <h2><span class="step">6</span>看 A 做 B 三链（B 过三关）</h2>
+    <ul class="tick">
+      <li><b>板块内</b>：文投/凯撒/金逸高位一字进不去 → 实封低位 <b>吉视 601929</b>；领湃 20cm 不可买 → 主板 <b>顺钠 000533、野马 605378</b>。</li>
+      <li><b>板块间</b>：算力/CPO/机器人退潮 → 资金真实切向红利、固态电池、AI 漫剧低价、防御食饮。</li>
+      <li><b>持仓拿 A 看 B</b>：若持仓属退潮方向，按机制盯上述低位 B；具体执行由你决定。</li>
+    </ul>
+    <div class="muted" style="margin-top:7px">三关（主板 60/00/003＋价≤48＋流通 20-200 亿）：吉视、顺钠、野马全部通过。<b class="red">紫竹高科 002058 因财务造假前科（2020-22 虚增收入、已行政处罚）剔除</b>。</div>
+  </div>
+
+  <!-- 步骤7 全天剧本 -->
+  <div class="card">
+    <h2><span class="step">7</span>全天剧本写死（盘中零临时决策）</h2>
+    <div class="tl">
+      <div class="t-item"><div class="t-t">9:25 看竞价</div><div class="t-d">低开幅度＋文投/九阳/北纬反馈＋顺钠/吉视/野马是否高开2-5%爆量、有梯队；不挂单。</div></div>
+      <div class="t-item"><div class="t-t">9:30-10:00 验证承接</div><div class="t-d">3600/3580 是否缩量止跌；储能大会催化下固态电池能否放量逆势；启动确认（回踩不破均价＋梯队）。</div></div>
+      <div class="t-item"><div class="t-t">10:00 定调</div><div class="t-d">企稳＋目标板块逆势放量→执行唯一一只；放量续杀＋标的跟跌→空仓等，不抢反弹。</div></div>
+      <div class="t-item"><div class="t-t">午后/尾盘</div><div class="t-d">只持确认票、不新开非主线、9:50 后不追高；看封板质量定 T+1 预期。</div></div>
+    </div>
+  </div>
+
+  <!-- 步骤8 可挂单信号卡 -->
+  <div class="card">
+    <h2><span class="step">8</span>可挂单信号卡</h2>
+    <table>
+      <tr><th>标的</th><th>买点区间</th><th>风险/止损</th><th>T+1 兑现</th></tr>
+      <tr>
+        <td><b>顺钠</b><br><span class="code">000533</span><br>收9.82</td>
+        <td>10.02<br>–10.31</td>
+        <td class="grn">29.46<br>止损9.53</td>
+        <td>封板/实封持有看连板；低开走弱、不板、破均价则冲高兑现</td>
+      </tr>
+      <tr>
+        <td><b>吉视</b><br><span class="code">601929</span><br>收2.96</td>
+        <td>3.02<br>–3.11</td>
+        <td class="grn">8.88<br>止损2.87</td>
+        <td>同上；AI 漫剧情绪活口，看文投退位后能否独立带队</td>
+      </tr>
+      <tr>
+        <td><b>野马</b><br><span class="code">605378</span><br>收15.52</td>
+        <td>15.83<br>–16.30</td>
+        <td class="gold">46.56<br>止损15.05</td>
+        <td>板块内补涨；换手偏低，仅在顺钠买不到时启用</td>
+      </tr>
+    </table>
+    <div class="muted" style="margin-top:8px">100 股、一次一只、永不补仓；风险均 ≤250（吉视 ≤200 档）。买点仅在高开 2-5% 黄金区间＋放量＋回踩不破均价成立；一字/&gt;8% 不追。</div>
+  </div>
+
+  <!-- 步骤9 铁律 -->
+  <div class="card">
+    <h2><span class="step">9</span>铁律校验</h2>
+    <ul class="tick">
+      <li>不以今天定义明天——冰点只给赔率，反转待竞价确认。</li>
+      <li>不只用消息定义——消息判定权交资金，不听故事。</li>
+      <li>不看单点——全景扫描后聚焦，三链覆盖。</li>
+      <li>不追高位虚封——北纬/文投/九阳只看。</li>
+      <li>不打买不进的票——一字/秒板不排队。</li>
+      <li>冰点带反转预案——低开杀恐慌→企稳低吸，若续杀则空仓。</li>
+    </ul>
+  </div>
+
+  <div class="disc">仅为投研方法与信息整理，不构成投资建议；涨停/跌停各口径略有差异已标注；逐笔封单以券商 APP 为准，盘中以实时资金与承接确认。</div>
+
+</div>
+</body>
+</html>

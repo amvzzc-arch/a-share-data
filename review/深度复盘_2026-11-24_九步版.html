@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11/24 九步深度复盘</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0e14; color:#e6e9ef; font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif; line-height:1.5; padding:12px; }
+  .wrap { max-width:420px; margin:0 auto; }
+  .card { background:#151a23; border:1px solid #232a38; border-radius:14px; padding:14px; margin-bottom:11px; }
+  .card h2 { font-size:14.5px; color:#38bdf8; margin-bottom:10px; }
+  .muted { color:#8b98ad; font-size:12px; }
+  .hero { background:linear-gradient(135deg,#0f2027,#151a23); border:1px solid #16384a; }
+  .hero .kicker { font-size:11.5px; color:#38bdf8; letter-spacing:1px; font-weight:600; }
+  .hero .title { font-size:20px; font-weight:800; color:#f1f5fb; margin:4px 0 2px; }
+  .ver { display:inline-block; margin-top:8px; font-size:11px; color:#fbbf24; background:#2a2113; border:1px solid #4a3a17; padding:2px 8px; border-radius:6px; font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:11.5px; }
+  th,td { padding:6px 4px; text-align:left; border-bottom:1px solid #232a38; vertical-align:top; }
+  th { color:#38bdf8; font-weight:600; font-size:10.5px; }
+  tr:last-child td { border-bottom:none; }
+  .red { color:#ff6b6b; font-weight:700; }
+  .grn { color:#34d399; font-weight:700; }
+  .gold { color:#fbbf24; font-weight:700; }
+  .cyn { color:#38bdf8; font-weight:700; }
+  .code { color:#8b98ad; font-size:10.5px; }
+  .step { display:inline-block; background:#0c2e3d; color:#38bdf8; font-size:10px; font-weight:800; padding:1px 7px; border-radius:5px; margin-right:6px; }
+  .ifthen .it { display:flex; gap:7px; font-size:12px; padding:5px 0; align-items:flex-start; }
+  .ifthen .lab { flex:0 0 auto; font-weight:700; font-size:10px; padding:1px 6px; border-radius:5px; margin-top:1px; }
+  .lab.yes { background:#163524; color:#34d399; }
+  .lab.no { background:#3b1d24; color:#f87171; }
+  .lab.mid { background:#3d2f16; color:#fbbf24; }
+  .num { display:flex; gap:6px; }
+  .num .n { flex:1; background:#11151d; border:1px solid #232a38; border-radius:9px; padding:7px 4px; text-align:center; }
+  .num .n .v { font-size:13.5px; font-weight:800; display:block; }
+  .num .n .l { font-size:9.5px; color:#8b98ad; margin-top:2px; display:block; }
+  .tl { position:relative; padding-left:16px; }
+  .tl::before { content:""; position:absolute; left:4px; top:5px; bottom:5px; width:2px; background:#232a38; }
+  .tl .t-item { position:relative; padding:6px 0; font-size:12.3px; }
+  .tl .t-item::before { content:""; position:absolute; left:-16px; top:11px; width:9px; height:9px; border-radius:50%; background:#38bdf8; border:2px solid #0b0e14; }
+  .tl .t-item .t-t { font-weight:700; color:#cbd5e3; font-size:12px; }
+  .tl .t-item .t-d { color:#9fb0c8; font-size:12px; }
+  .lead { font-size:12.6px; background:#11151d; border-left:3px solid #38bdf8; padding:9px 11px; border-radius:0 8px 8px 0; }
+  ul.tick { list-style:none; }
+  ul.tick li { font-size:12px; padding:4px 0 4px 16px; position:relative; color:#9fb0c8; }
+  ul.tick li::before { content:"▸"; position:absolute; left:2px; color:#38bdf8; }
+  .disc { font-size:11px; color:#6b7689; text-align:center; margin:6px 0 10px; line-height:1.6; }
+  .daytag { font-size:10px; font-weight:700; padding:1px 6px; border-radius:5px; }
+  .d23 { background:#163524; color:#86efac; }
+  .d24 { background:#3b1d24; color:#fca5a5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <div class="kicker">A 股 · 短线跟随 · 九步深度复盘（v5.1）</div>
+    <div class="title">11/24 周二 · 高开低走放量分化</div>
+    <div class="muted">更新于 11-24 收盘后 · 预演 11-25 周三</div>
+    <div class="ver">黄仁勋复职利好未引爆半导体，资金延续汽车/机器人；封板率从85.9%骤降到44.7%，但昨日涨停今日仍有+4%溢价，是分化不是退潮</div>
+    <div class="ver" style="color:#f87171;background:#2a1418;border-color:#4a1d24">问题单：超声电子早盘追脉冲买在最高、未封板，且穿透−3%止损未执行</div>
+  </div>
+
+  <!-- 1 消息 -->
+  <div class="card">
+    <h2><span class="step">1</span>消息扫描：黄仁勋外溢＋汽车/无人机，关税是变量</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab no">AMD</span><div><b>超威半导体（AMD）美股盘前跌超6%</b>，黄仁勋回归后资金从竞品回流英伟达；韩券商称其回归将缓解Neocloud融资与客户谈判不确定性，<b>推动整个AI产业恢复信心</b>。</div></div>
+      <div class="it"><span class="lab yes">汽车</span><div>比亚迪就收购英力士法国汉巴赫工厂展开排他谈判，规划欧洲本土生产；<b>美国防部被曝与通用、福特洽谈，借汽车装配线大规模生产军用无人机</b>。汽车/无人机叙事再加强。</div></div>
+      <div class="it"><span class="lab mid">外围</span><div>WTI原油涨破81美元（+1%）；高盛称仓位指标降至“解放日”以来最低，历史上利于后续回报；美媒称美国最快周二宣布加征关税，是最大外部变量。</div></div>
+      <div class="it"><span class="lab no">公告</span><div>杭州解百异动公告（两日偏离超20%、前三季营收−3.4%）；高位股异动与监管降温延续，是连板情绪的压制项。</div></div>
+    </div>
+  </div>
+
+  <!-- 2 数据 -->
+  <div class="card">
+    <h2><span class="step">2</span>全市场数据：放量分化，溢价仍在</h2>
+    <table>
+      <tr><th>指标</th><th><span class="daytag d23">11-23</span></th><th><span class="daytag d24">11-24</span></th></tr>
+      <tr><td>涨停</td><td class="grn">146</td><td class="red">55</td></tr>
+      <tr><td>炸板 / 跌停</td><td class="grn">24 / 3</td><td class="red">68 / 2</td></tr>
+      <tr><td>封板率</td><td class="grn">85.9%</td><td class="red">44.7%</td></tr>
+      <tr><td>成交额</td><td>1.55万亿</td><td class="gold">1.66万亿（放量约1050亿）</td></tr>
+    </table>
+    <div style="height:8px"></div>
+    <div class="num">
+      <div class="n"><span class="v grn">+4.11%</span><span class="l">首板开盘均溢价</span></div>
+      <div class="n"><span class="v grn">+4.22%</span><span class="l">首板收盘均溢价</span></div>
+      <div class="n"><span class="v gold">19.5%</span><span class="l">首板晋级率</span></div>
+    </div>
+    <div class="muted" style="margin-top:9px">11-23共146只涨停（首板128、连板17），今日取到145只日K：<b>首板红盘率78.1%、开盘均溢价+4.11%</b>；连板开盘+3.93%、晋级29.4%；全体晋级20.7%。三大指数高开后全线回落，上证收3548.37（+0.27%）、深成−0.29%、创业板−0.05%。</div>
+  </div>
+
+  <!-- 3 五维 -->
+  <div class="card">
+    <h2><span class="step">3</span>五维框架（齐才出结论）</h2>
+    <table>
+      <tr><th>维度</th><th>判定</th></tr>
+      <tr><td><b>量能</b></td><td class="gold">1.66万亿逆势放量约1050亿，不是缩量阴跌；放量＋炸板68说明高位筹码剧烈换手、多空分歧大</td></tr>
+      <tr><td><b>情绪节奏</b></td><td class="red">涨停146→55、封板率85.9%→44.7%，普涨次日进入分化淘汰；但跌停仅2、昨日票仍有+4%溢价，<b>属强分歧而非退潮冰点</b></td></tr>
+      <tr><td><b>资金流向</b></td><td>资金抱团汽车零部件（8只）＋通用设备（5只），半导体全天仅1只涨停，黄仁勋利好被资金选择性忽略</td></tr>
+      <tr><td><b>筹码</b></td><td class="red">烂板频现：东方海洋炸10、横店影视炸9、华东重机炸7、兴欣新材炸6；高位股封流普遍走低，承接转弱</td></tr>
+      <tr><td><b>消息</b></td><td>AI/汽车产业催化仍在，但关税加征悬而未决、监管降温，资金更愿做确定性主线而非追新利好</td></tr>
+    </table>
+    <div class="lead" style="margin-top:9px">这是<b class="gold">放量强分歧日</b>：分歧在盘中（炸板潮），但情绪底没破（跌停少、溢价在）。明天看分化后谁能率先重新走强，<b>不拿今天的弱势直接定义明天</b>。</div>
+  </div>
+
+  <!-- 4 龙头 -->
+  <div class="card">
+    <h2><span class="step">4</span>情绪龙头：高标分化，主线仍在汽车链</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab mid">中京电子</span><div><b>4板（0炸、封流2.09、换手8.8、元件）</b>，今日最高标，封单较前期回落但全天未炸，是当前情绪锚；明天能否进5板决定连板高度。</div></div>
+      <div class="it"><span class="lab yes">克来机电</span><div>3板0炸、<b>封流7.55最厚</b>，汽车零部件，身位扎实；同板块长华集团3板。汽车链梯队最完整。</div></div>
+      <div class="it"><span class="lab yes">一彬科技</span><div>2板0炸、<b>封流33.2全场最强</b>，汽车零部件，是低位最强换手龙，明天重点看能否加速。</div></div>
+      <div class="it"><span class="lab no">烂板</span><div>东方海洋3板炸10、柯力传感2板炸32、安培龙2板炸12，封流近乎归零，属资金抛弃对象，不碰。</div></div>
+    </div>
+  </div>
+
+  <!-- 5 预期差 -->
+  <div class="card">
+    <h2><span class="step">5</span>预期差：退潮表象 vs 真实承接</h2>
+    <div class="muted" style="margin-bottom:6px"><b class="red">盘面共识</b>：高开低走、炸板68、封板率腰斩，看似退潮信号。</div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">真①</span><div>昨日146只涨停今日<b>红盘率75%、均溢价+4.2%</b>，打板资金整体仍赚钱，没有出现核按钮式踩踏，承接真实存在。</div></div>
+      <div class="it"><span class="lab yes">真②</span><div>放量1050亿说明有资金在分歧中接货，而非无量空跌；汽车/机器人主线龙头封单依旧厚实，主线没散。</div></div>
+      <div class="it"><span class="lab no">风险</span><div>若明天关税落地偏空、或中京电子断板带崩高度，分歧可能转为真退潮；弱势烂板与无板块效应的尾盘偷袭板，仍要规避。</div></div>
+    </div>
+  </div>
+
+  <!-- 盘前验证 -->
+  <div class="card">
+    <h2><span class="step">核</span>盘前判断验证：黄仁勋利好为何没引爆半导体</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab mid">验证</span><div>盘前预演把黄仁勋复职列为AI/半导体催化，但今日半导体全天仅1只涨停，资金选择延续汽车/机器人——<b>利好是真的，A股资金不接也是真的</b>：主线一旦形成，资金有路径依赖，外部利好需竞价放量确认，不能提前埋伏硬等。</div></div>
+      <div class="it"><span class="lab yes">纪律</span><div>达链4只（超声/神州/沃尔/荣联）全天走弱，超声−3.97%、荣联−2.88%，再次验证“<b>不封板不打、横盘票划走</b>”。把它们当情绪锚而非待买清单，是正确处理。</div></div>
+    </div>
+  </div>
+
+  <!-- 实盘交易复盘 -->
+  <div class="card">
+    <h2><span class="step">实</span>今日实盘交易复盘（3 笔）</h2>
+    <div class="num">
+      <div class="n"><span class="v grn">+195</span><span class="l">襄阳(已实现)</span></div>
+      <div class="n"><span class="v grn">+220</span><span class="l">文投(已实现)</span></div>
+      <div class="n"><span class="v red">−139</span><span class="l">超声(浮亏)</span></div>
+    </div>
+    <div class="ifthen" style="margin-top:9px">
+      <div class="it"><span class="lab yes">襄阳</span><div><b>最成功、可复制</b>：17.65启动确认低吸→19.60卖出，+11.05%。贴机器人主线、吃满主升，尾盘未封板兑现合理，不算卖飞。这是体系内最优交易范式。</div></div>
+      <div class="it"><span class="lab mid">文投</span><div>2.89→3.11，+7.61%。卖出后封板3.14，1000股仅差30元，属<b>小卖飞但纪律正确</b>：它是封流0.28、换手32%的弱封尾盘板，本就不格局，不能用后面涨停反推。</div></div>
+      <div class="it"><span class="lab no">超声</span><div><b>核心问题单</b>：9:40追在20.49（9:39见顶20.86即全天最高），全天未封板、收19.10。<b>三重违规</b>：①追直线脉冲、未等封板确认（防诱多条款）②它本是不封板的“达链”走弱票 ③跌破19.88止损线未执行，亏损从应有的约−61元扩大到−139元。</div></div>
+    </div>
+    <div class="lead" style="margin-top:9px; border-left-color:#f87171">
+      <b class="red">改进（写死）</b>：①下单前必问——封板了吗？放量站均价了吗？两个都“是”才动手，脉冲拉升不追；②买入后跌破 买价×0.97 无条件止损，不抱幻想、不补仓；③弱封单/横盘票只当情绪锚，不进待买清单。今日两笔盈利合计+415元，被问题单侵蚀，<b>净结果约+276元</b>。
+    </div>
+    <div class="muted" style="margin-top:8px">⚠️ 数据待核实：你自述超声“29.8买入”，但000823今日最高仅20.86、9:40真实价20.49，本卡按20.49记账，请打开券商APP核对真实成交价与代码。</div>
+  </div>
+
+  <!-- PK 候选 -->
+  <div class="card">
+    <h2><span class="step">PK</span>明天一进二候选（均已防雷，今日首板整体偏弱）</h2>
+    <table>
+      <tr><th>标的</th><th>封流%</th><th>炸</th><th>换手</th><th>方向</th><th>定性</th></tr>
+      <tr><td><b>嘉环科技</b><br><span class="code">603206</span><br>收14.42</td><td class="gold">0.92</td><td class="grn">0</td><td>3.3</td><td>ICT/华为AI</td><td class="gold">合规首板封流最高</td></tr>
+      <tr><td><b>天龙股份</b><br><span class="code">603266</span><br>收14.75</td><td>0.65</td><td class="grn">0</td><td>2.9</td><td>汽车零部件</td><td style="color:#fbbf24">有主线板块兜底</td></tr>
+      <tr><td colspan="6" class="muted">威派格 603956：连续两年半亏损（2024 −2.12亿/2025 −1.53亿）且自澄清无液冷订单、AI为蹭概念，<b>降级剔除首选</b>。</td></tr>
+    </table>
+    <div class="ifthen" style="margin-top:8px">
+      <div class="it"><span class="lab yes">嘉环</span><div>主营ICT通信服务、华为生态，近5年仅一笔50元税务轻微处罚（非信披），无立案/造假/ST；<b>但有银行账户部分冻结进展公告</b>，需留意，仓位从严。</div></div>
+      <div class="it"><span class="lab yes">天龙</span><div>宁波天龙电子（区别于创业板300063天龙科技），近5年干净、0炸，背靠今日最强汽车零部件主线；注意其昨日已封板、今日重新首板，身位反复。</div></div>
+      <div class="it"><span class="lab no">规避</span><div>奥康国际（2024立案+300万处罚+曾ST）、百傲化学（2026-4立案）、全筑股份（恒大坏账/诉讼）、东方精工（炸6封流0.17）。</div></div>
+    </div>
+  </div>
+
+  <!-- 6 看A做B -->
+  <div class="card">
+    <h2><span class="step">6</span>看 A 做 B（B 过三关＋防雷）</h2>
+    <ul class="tick">
+      <li><b>板块内</b>：中京/克来高位不追 → 汽车链低位0炸首板（天龙），或华为AI方向（嘉环）。</li>
+      <li><b>板块间</b>：资金不接半导体、抱团汽车/通用设备 → 跟随最强主线，不逆势埋伏冷门利好。</li>
+      <li><b>三关＋防雷</b>：均主板、价≤48、流通20–200亿，无ST、无近期立案、净资产为正。</li>
+    </ul>
+    <div class="muted" style="margin-top:7px">今天首板封流普遍弱（最高0.92），<b>明天没有高置信标的</b>：竞价谁放量、封单转厚、属当前最强方向才打，不达标就空仓，宁缺毋滥。</div>
+  </div>
+
+  <!-- 7 剧本 -->
+  <div class="card">
+    <h2><span class="step">7</span>明日剧本写死（11-25 周三 · 零临时决策）</h2>
+    <div class="tl">
+      <div class="t-item"><div class="t-t">9:25 竞价筛</div><div class="t-d">看中京电子是否进5板（情绪锚）、汽车链梯队延续性、候选高开幅度（2–5%为佳）、竞价量能、关税消息是否落地。</div></div>
+      <div class="t-item"><div class="t-t">9:30–9:45 打板窗口</div><div class="t-d">候选高开2–5%放量上板、封单转厚、主线梯队配合则打；午后不做首板。</div></div>
+    </div>
+    <div class="ifthen" style="margin-top:8px">
+      <div class="it"><span class="lab yes">强</span><div>中京不断板＋汽车链继续扩散、指数站稳：打封单最实的一只，股数按9.2动态定。</div></div>
+      <div class="it"><span class="lab mid">震荡</span><div>高标分歧但低位有承接、个股放量封板：只打确认最实的一只，否则空仓。</div></div>
+      <div class="it"><span class="lab no">弱</span><div>关税利空/中京断板带崩、跌停放大、指数破位无承接：空仓等企稳，不接飞刀。</div></div>
+    </div>
+  </div>
+
+  <!-- 8 信号卡 -->
+  <div class="card">
+    <h2><span class="step">8</span>可挂单信号卡</h2>
+    <table>
+      <tr><th>标的</th><th>高开2–5%买点</th><th>止损(−3%)</th><th>参考风险</th></tr>
+      <tr><td><b>嘉环科技</b><br><span class="code">603206</span></td><td>14.71–15.14</td><td class="grn">13.99</td><td class="gold">约43元/100股</td></tr>
+      <tr><td><b>天龙股份</b><br><span class="code">603266</span></td><td>15.05–15.49</td><td class="grn">14.31</td><td class="gold">约44元/100股</td></tr>
+    </table>
+    <div class="muted" style="margin-top:8px">高开2–5%须放量＋回踩不破均价；一字/&gt;8%不追；硬止损−3%、单笔风险≤250、不补仓。<b>持仓超声的处理</b>：19.88（原止损/今日均价）是第一压力，站不上仍弱；19.05（今日最低）破则继续下探，关键价位给你、执行你定。</div>
+  </div>
+
+  <!-- 9 铁律 -->
+  <div class="card">
+    <h2><span class="step">9</span>铁律校验＋漏洞审计</h2>
+    <ul class="tick">
+      <li>不以今天定义明天——强分歧只给赔率，能否转强待竞价确认。</li>
+      <li>全景扫描后聚焦，不追中京/克来高位，不被半导体单一利好锚定。</li>
+      <li>分化期只打实封＋健康换手，弱封单/横盘票当情绪锚，宁缺毋滥。</li>
+      <li>风险≤250、动态定股数、不补仓、硬止损−3%且必须执行。</li>
+    </ul>
+    <div class="lead" style="margin-top:9px; border-left-color:#fbbf24">
+      <b class="gold">催化日历</b>：11-26（周四）高交会（算力/储能/机器人）；11-30（下周一）融资保证金100%→80%生效。<b>漏洞提示</b>：今日暴露的最大体系漏洞不是规则缺失，而是“止损纪律未被执行”——规则已写明−3%，需把止损做成下单即挂条件单的机械动作，减少临场犹豫空间。
+    </div>
+  </div>
+
+  <div class="disc">仅为投研方法与信息整理，不构成投资建议；涨停/跌停各口径略有差异已标注；逐笔封单以券商 APP 为准，盘中以实时资金与承接确认，据此操作盈亏自负。</div>
+
+</div>
+</body>
+</html>

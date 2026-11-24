@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11/16 盘前作战卡</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0e14; color:#e6e9ef; font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif; line-height:1.5; padding:12px; }
+  .wrap { max-width:420px; margin:0 auto; }
+  .card { background:#151a23; border:1px solid #232a38; border-radius:14px; padding:14px; margin-bottom:11px; }
+  .card h2 { font-size:15px; color:#7dd3fc; margin-bottom:10px; }
+  .muted { color:#8b98ad; font-size:12px; }
+  .sub { font-size:12.5px; color:#9fb0c8; }
+  .hero { background:linear-gradient(135deg,#16202e,#151a23); border:1px solid #243348; }
+  .hero .kicker { font-size:11.5px; color:#7dd3fc; letter-spacing:1px; font-weight:600; }
+  .hero .title { font-size:21px; font-weight:800; color:#f1f5fb; margin:4px 0 2px; }
+  .ver { display:inline-block; margin-top:8px; font-size:11px; color:#fbbf24; background:#2a2113; border:1px solid #4a3a17; padding:2px 8px; border-radius:6px; font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th,td { padding:7px 5px; text-align:left; border-bottom:1px solid #232a38; vertical-align:top; }
+  th { color:#7dd3fc; font-weight:600; font-size:11.5px; }
+  tr:last-child td { border-bottom:none; }
+  .red { color:#ff6b6b; font-weight:700; }
+  .grn { color:#34d399; font-weight:700; }
+  .gold { color:#fbbf24; font-weight:700; }
+  .code { color:#8b98ad; font-size:11px; }
+  .tag { display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:5px; font-weight:700; white-space:nowrap; }
+  .t-main { background:#3b1d24; color:#ff6b6b; }
+  .t-b { background:#1c2c46; color:#7dd3fc; }
+  .t-watch { background:#3d2f16; color:#fbbf24; }
+  .t-no { background:#3b1d24; color:#f87171; }
+  .t-ok { background:#163524; color:#34d399; }
+  .row { display:flex; gap:8px; padding:7px 0; border-bottom:1px solid #232a38; font-size:12.5px; align-items:flex-start; }
+  .row:last-child { border-bottom:none; }
+  .row .k { flex:0 0 64px; font-weight:700; color:#cbd5e3; }
+  .check { display:flex; gap:8px; font-size:12.5px; padding:6px 0; align-items:flex-start; }
+  .check .box { flex:0 0 16px; height:16px; border-radius:4px; border:1.5px solid #7dd3fc; margin-top:2px; }
+  .ifthen .it { display:flex; gap:7px; font-size:12px; padding:5px 0; align-items:flex-start; }
+  .ifthen .lab { flex:0 0 auto; font-weight:700; font-size:10.5px; padding:1px 6px; border-radius:5px; margin-top:1px; }
+  .lab.yes { background:#163524; color:#34d399; }
+  .lab.no { background:#3b1d24; color:#f87171; }
+  .tl { position:relative; padding-left:16px; }
+  .tl::before { content:""; position:absolute; left:4px; top:5px; bottom:5px; width:2px; background:#232a38; }
+  .tl .t-item { position:relative; padding:6px 0; font-size:12.5px; }
+  .tl .t-item::before { content:""; position:absolute; left:-16px; top:11px; width:9px; height:9px; border-radius:50%; background:#7dd3fc; border:2px solid #0b0e14; }
+  .tl .t-item .t-t { font-weight:700; color:#cbd5e3; font-size:12px; }
+  .tl .t-item .t-d { color:#9fb0c8; font-size:12px; }
+  .disc { font-size:11px; color:#6b7689; text-align:center; margin:6px 0 10px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <div class="kicker">A 股 · 短线跟随 · 盘前作战卡</div>
+    <div class="title">11/16 周一 · 竞价决胜</div>
+    <div class="muted">2026-11-16 08:58 · 沪深主板 · 一进二 / 启动确认</div>
+    <div class="ver">体系 v5.1 · 量能聚焦</div>
+  </div>
+
+  <!-- 早间快报 -->
+  <div class="card">
+    <h2>🌅 早间快报（竞价前必读）</h2>
+    <div class="row"><div class="k">外围科技</div><div><b class="grn">英伟达暗盘 +3.56%</b>（一度超 4%），美光/闪迪/SK海力士 +2%，纳指期货 +0.60% → 科技情绪或修复，但周三凌晨才正式财报，仍有扰动。</div></div>
+    <div class="row"><div class="k">大宗</div><div>油金银齐跌：美油 88.32（−0.27%）、布油 95.32（−0.54%）、黄金 3878 → 霍尔木兹缓和兑现，通胀压力缓。</div></div>
+    <div class="row"><div class="k">资金面</div><div><b class="red">两市融资余额 −165.44 亿</b>（截至 11/13），杠杆盘集中出清；央行今日 2000 亿买断式逆回购。</div></div>
+    <div class="row"><div class="k">机构口径</div><div>银河证券：向下风险收敛、结构性轮动为主；存量博弈，无增量杠杆。</div></div>
+  </div>
+
+  <!-- 今日定调 -->
+  <div class="card">
+    <h2>🧭 今日定调</h2>
+    <div class="sub">修复概率上升（外围暖＋地缘缓＋流动性），但<b class="gold">融资在撤、存量博弈，6 个方向只够托起 1-2 个主线</b>。天普停牌压高度，资金走宽度、往低位走。<b style="color:#f1f5fb">9:25 量能聚焦：谁爆量、谁有合力、谁有做高决心就站谁，其余放弃，不平均用力。</b></div>
+  </div>
+
+  <!-- 竞价五道筛 -->
+  <div class="card">
+    <h2>✅ 9:15-9:25 竞价五道筛</h2>
+    <div class="check"><span class="box"></span><div><b>情绪</b>：指数红绿、高开家数、红盘占比、昨日涨停溢价。</div></div>
+    <div class="check"><span class="box"></span><div><b>中军</b>：板块有无大市值容量票带队（非个股裸奔）。</div></div>
+    <div class="check"><span class="box"></span><div><b>个股高开</b>：核心高开 3-5%（&gt;7% 或一字不追，&lt;2% 强度不足）。</div></div>
+    <div class="check"><span class="box"></span><div><b>竞价量能</b>：竞价爆量、量比明显放大，弱转强＝前日烂板＋今日爆量高开。</div></div>
+    <div class="check"><span class="box"></span><div><b>板块梯队</b>：同方向多家高开、有龙一有跟风，不是孤票。</div></div>
+  </div>
+
+  <!-- 主攻排序 -->
+  <div class="card">
+    <h2>🎯 主攻排序（盘前倾向，竞价定生死）</h2>
+    <table>
+      <tr><th>方向</th><th>标的（100股）</th><th>竞价确认</th></tr>
+      <tr><td><b>AI+矿山</b><br><span class="muted">受英伟达暗盘带动</span></td><td>云鼎科技 <span class="code">000409</span> 8.22<br>易普力 <span class="code">002096</span> 8.78</td><td class="grn">科技放量、高开3-5%、回踩不破均价</td></tr>
+      <tr><td><b>医药</b><br><span class="muted">防御/消息最硬</span></td><td>中源协和 <span class="code">600645</span> 16.77<br>东诚药业 <span class="code">002675</span> 12.74</td><td class="gold">防御占优、核心放量；高开冲太猛不追</td></tr>
+      <tr><td><b>储能</b><br><span class="muted">低价先手</span></td><td>林洋能源 <span class="code">601222</span> 5.24<br>金开新能 <span class="code">600821</span></td><td class="grn">集体高开、林洋放量、有梯队</td></tr>
+      <tr><td><b>游戏</b><br><span class="muted">事件驱动</span></td><td>姚记科技 <span class="code">002605</span> 17.68<br>游族网络 <span class="code">002174</span> 10.86</td><td class="gold">集体放量高开才做，防一日游</td></tr>
+    </table>
+    <div class="muted" style="margin-top:8px">周五先手：金新农 <span class="code">002548</span>、华胜天成 <span class="code">600410</span> 用弱转强验证，不看封单就追。</div>
+  </div>
+
+  <!-- 不追清单 -->
+  <div class="card">
+    <h2>🚫 今日不追 / 防雷</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab no">机器人</span><div>亿嘉和 <span class="code">603666</span> 已 5 连涨、14:00 发布会兑现，只看不动；软通/拓斯达创业板不可买。</div></div>
+      <div class="it"><span class="lab no">高位</span><div>东方海洋/澳洋/龙江/大东方/日出东方等不接飞刀；天普停牌不在场。</div></div>
+      <div class="it"><span class="lab no">中位</span><div>不碰 3-6 板中位接力，高位震荡期中位易吃面。</div></div>
+      <div class="it"><span class="lab no">庄股/雷</span><div>无量/量价背离/锁仓/对倒回避；南卫股份 603880 不碰。</div></div>
+    </div>
+  </div>
+
+  <!-- 时间轴 -->
+  <div class="card">
+    <h2>⏱️ 9:15-午后 时间轴</h2>
+    <div class="tl">
+      <div class="t-item"><div class="t-t">9:15-9:25 竞价五道筛</div><div class="t-d">定方向、看量能、选中军，不挂单。</div></div>
+      <div class="t-item"><div class="t-t">9:25-9:30 定主攻</div><div class="t-d">锁定唯一爆量合力方向，一次一只。</div></div>
+      <div class="t-item"><div class="t-t">9:30-9:45 黄金窗口</div><div class="t-d">3-6% 启动确认：放量＋梯队＋回踩不破均价，低吸。</div></div>
+      <div class="t-item"><div class="t-t">10:00 国新办经济数据</div><div class="t-d">波动加大、不追。</div></div>
+      <div class="t-item"><div class="t-t">14:00 华为云机器人发布会</div><div class="t-d">防兑现，不追高。</div></div>
+      <div class="t-item"><div class="t-t">午后</div><div class="t-d">不新开非主线，9:50 后不追高。</div></div>
+    </div>
+  </div>
+
+  <!-- 风控速查 -->
+  <div class="card">
+    <h2>🛡️ 风控速查（100股 −3% 风险）</h2>
+    <div class="sub">云鼎 24.7｜易普力 26.3｜林洋 15.7｜中源协和 50.3｜东诚 38.2｜姚记 53.0｜游族 32.6｜金新农 11.5（元）。</div>
+    <div class="muted" style="margin-top:7px">单票 100 股、一次一只、永不补仓；−3% 硬止损（隔夜跳空可能穿透，结合竞价）；单笔风险 ≤250 元，全部满足。</div>
+  </div>
+
+  <div class="disc">仅为投研方法与信息整理，不构成投资建议；价位/市值为 11-13 静态值，9:25 以实时竞价为准。</div>
+
+</div>
+</body>
+</html>

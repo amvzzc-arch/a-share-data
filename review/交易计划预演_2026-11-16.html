@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11/16 周一 · 交易计划预演</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0e14; color:#e6e9ef; font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif; line-height:1.5; padding:12px; }
+  .wrap { max-width:420px; margin:0 auto; }
+  .card { background:#151a23; border:1px solid #232a38; border-radius:14px; padding:14px; margin-bottom:11px; }
+  .card h2 { font-size:15px; color:#7dd3fc; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+  .card h3 { font-size:13.5px; color:#cbd5e3; margin:10px 0 6px; }
+  .muted { color:#8b98ad; font-size:12px; }
+  .sub { font-size:12.5px; color:#9fb0c8; }
+  /* 顶部 */
+  .hero { background:linear-gradient(135deg,#16202e,#151a23); border:1px solid #243348; }
+  .hero .kicker { font-size:11.5px; color:#7dd3fc; letter-spacing:1px; font-weight:600; }
+  .hero .title { font-size:21px; font-weight:800; color:#f1f5fb; margin:4px 0 2px; }
+  .hero .meta { font-size:12px; color:#8b98ad; }
+  .ver { display:inline-block; margin-top:8px; font-size:11px; color:#fbbf24; background:#2a2113; border:1px solid #4a3a17; padding:2px 8px; border-radius:6px; font-weight:600; }
+  /* 总基调 */
+  .tone { background:linear-gradient(135deg,#2d181d,#151a23); border:1px solid #5a2b33; }
+  .tone .big { font-size:17px; font-weight:800; color:#fbbf24; margin:5px 0; }
+  /* 表格 */
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th,td { padding:7px 5px; text-align:left; border-bottom:1px solid #232a38; vertical-align:top; }
+  th { color:#7dd3fc; font-weight:600; font-size:11.5px; }
+  tr:last-child td { border-bottom:none; }
+  .red { color:#ff6b6b; font-weight:700; }
+  .grn { color:#34d399; font-weight:700; }
+  .gold { color:#fbbf24; font-weight:700; }
+  .code { color:#8b98ad; font-size:11px; }
+  /* 标签 */
+  .tag { display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:5px; font-weight:700; white-space:nowrap; }
+  .t-main { background:#3b1d24; color:#ff6b6b; }
+  .t-b { background:#1c2c46; color:#7dd3fc; }
+  .t-watch { background:#3d2f16; color:#fbbf24; }
+  .t-avoid { background:#262a33; color:#8b98ad; }
+  .t-ok { background:#163524; color:#34d399; }
+  .t-no { background:#3b1d24; color:#f87171; }
+  /* 消息条目 */
+  .news { display:flex; gap:9px; padding:8px 0; border-bottom:1px solid #232a38; }
+  .news:last-child { border-bottom:none; }
+  .news .n-no { flex:0 0 20px; height:20px; border-radius:6px; background:#1c2c46; color:#7dd3fc; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .news .n-bd { flex:1; }
+  .news .n-ti { font-size:12.8px; color:#e6e9ef; font-weight:600; }
+  .news .n-ti span { font-weight:400; color:#9fb0c8; }
+  /* 题材卡 */
+  .theme { border-left:3px solid #ff6b6b; }
+  .theme.store { border-left-color:#fbbf24; }
+  .theme.ai { border-left-color:#7dd3fc; }
+  .logic { background:#121720; border:1px solid #232a38; border-radius:9px; padding:8px 10px; font-size:12px; color:#b9c4d4; margin-bottom:9px; }
+  .pick { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid #232a38; }
+  .pick:last-of-type { border-bottom:none; }
+  .pick .p-l .p-n { font-size:13.5px; font-weight:700; color:#f1f5fb; }
+  .pick .p-l .p-d { font-size:11.5px; color:#8b98ad; margin-top:1px; }
+  .pick .p-r { text-align:right; font-size:12px; }
+  .ifthen { margin-top:9px; }
+  .ifthen .it { display:flex; gap:7px; font-size:12px; padding:5px 0; align-items:flex-start; }
+  .ifthen .it .lab { flex:0 0 auto; font-weight:700; font-size:10.5px; padding:1px 6px; border-radius:5px; margin-top:1px; }
+  .lab.yes { background:#163524; color:#34d399; }
+  .lab.no { background:#3b1d24; color:#f87171; }
+  /* 时间轴 */
+  .tl { position:relative; padding-left:16px; }
+  .tl::before { content:""; position:absolute; left:4px; top:5px; bottom:5px; width:2px; background:#232a38; }
+  .tl .t-item { position:relative; padding:6px 0; font-size:12.5px; }
+  .tl .t-item::before { content:""; position:absolute; left:-16px; top:11px; width:9px; height:9px; border-radius:50%; background:#7dd3fc; border:2px solid #0b0e14; }
+  .tl .t-item .t-t { font-weight:700; color:#cbd5e3; font-size:12px; }
+  .tl .t-item .t-d { color:#9fb0c8; font-size:12px; }
+  /* 风险条 */
+  .riskbar { height:7px; background:#232a38; border-radius:4px; overflow:hidden; margin-top:4px; }
+  .riskbar i { display:block; height:100%; background:linear-gradient(90deg,#34d399,#fbbf24); }
+  .disc { font-size:11px; color:#6b7689; text-align:center; margin:6px 0 10px; line-height:1.6; }
+  .note { font-size:11.5px; color:#8b98ad; margin-top:8px; padding-top:8px; border-top:1px dashed #2a3342; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 顶部 -->
+  <div class="card hero">
+    <div class="kicker">A 股 · 短线跟随 · 盘前预演</div>
+    <div class="title">11/16 周一作战卡</div>
+    <div class="meta">2026-11-16 · 沪深主板 · 一进二 / 启动确认</div>
+    <div class="ver">体系 v5.1 · 短线跟随版</div>
+  </div>
+
+  <!-- 总基调 -->
+  <div class="card tone">
+    <h2>⚠️ 总基调 · 退潮中后段 + 监管降温 + 政策暖风</h2>
+    <div class="big">最高标停牌，资金更得往低位走</div>
+    <div class="sub">连续两日调整、量能从 1.93 万亿缩到 1.66 万亿，抛压衰竭但尚未企稳；天普 4 板被停牌核查、监管给高位连板降温，连板最高在位高度下移。周末医保/储能/AI+ 三政策 + BLG 夺冠给方向，周一大概率修复（中信建投称市场底大概率确认、央行 2000 亿逆回购投放）。<b style="color:#34d399">夜间再添一暖：霍尔木兹海峡通航协议落地、地缘缓和油价回落，风险偏好修复概率上升。</b>但方向越多越要聚焦——盘前只做假设、不下结论，9:25 用竞价确认合力，启动确认低吸为主，绝不排一字、不追高。</div>
+  </div>
+
+  <!-- 情绪位置 -->
+  <div class="card">
+    <h2>📊 情绪位置 · 近三日量价</h2>
+    <table>
+      <tr><th>日期</th><th>沪指</th><th>成交</th><th>情绪</th></tr>
+      <tr><td>11/11 周三</td><td class="red">3680.64<br>+0.46%</td><td>1.68万亿</td><td>85涨停，放量修复、CPO主线</td></tr>
+      <tr><td>11/12 周四</td><td class="grn">3655.83<br>−0.67%</td><td class="gold">1.93万亿<br>放量2558亿</td><td>37涨停5跌停，放量杀跌</td></tr>
+      <tr><td>11/13 周五</td><td class="grn">3634.35<br>−0.59%</td><td>1.66万亿<br>缩量2700亿</td><td>37-38涨停，跌停口径21-39</td></tr>
+    </table>
+    <div class="muted" style="margin-top:8px">周五深成 <span class="grn">−2.05%</span>、创业板 <span class="grn">−3.32%</span>（财联社），主力净流出超 700 亿、超 4700 只下跌，景旺电子跌停；连板高度由 5 板压到 4 板。<b style="color:#cbd5e3">缩量阴跌=抛压衰竭、接近冰点，但仍有 30+ 涨停，非崩盘。</b></div>
+    <div class="note">数据口径冲突：周五涨停 31-38 家、跌停 21-39 家（21财经/文哥/财联社不一），精确炸板率以券商 APP / 东方财富为准，不编造。</div>
+  </div>
+
+  <!-- 周末消息面 -->
+  <div class="card">
+    <h2>🗞️ 周末消息面全景（11/13-15）</h2>
+    <div class="news"><div class="n-no">1</div><div class="n-bd"><div class="n-ti">医保目录调整 <span class="tag t-main">利好医药</span></div><div class="sub">新增 107 种、含 51 个 1 类创新药；CAR-T 首次进医保（瑞基奥仑赛 129 万→低于 30 万、全球最低价），2027/1/1 执行，商保+医保双目录。</div></div></div>
+    <div class="news"><div class="n-no">2</div><div class="n-bd"><div class="n-ti">新型储能实施方案 <span class="tag t-watch">利好储能</span></div><div class="sub">“十五五”装机 3 亿千瓦、平均时长约 3 小时、16 项举措，规模化转向市场化。</div></div></div>
+    <div class="news"><div class="n-no">3</div><div class="n-bd"><div class="n-ti">“人工智能+”行动 <span class="tag t-b">利好工业AI</span></div><div class="sub">优先矿山、高空、应急等“险脏累繁难”场景及中试基地。</div></div></div>
+    <div class="news"><div class="n-no">4</div><div class="n-bd"><div class="n-ti">中美贸易理事会首次会议 <span class="tag t-b">偏暖</span></div><div class="sub">“300 亿对 300 亿”对等降税。<b style="color:#fbbf24">利好对美出口链；农产品系扩大自美进口，对国内农业中性偏空，勿反着炒。</b></div></div></div>
+    <div class="news"><div class="n-no">5</div><div class="n-bd"><div class="n-ti">外汇存款准备金率 4%→6% <span class="tag t-watch">近五年首次</span></div><div class="sub">收紧境内美元、抑制人民币过快升值，间接利好出口；航空等美元负债端偏空。</div></div></div>
+    <div class="news"><div class="n-no">6</div><div class="n-bd"><div class="n-ti">吴清发声 <span class="tag t-ok">稳市场</span></div><div class="sub">A 股总市值破 100 万亿，研究稳市场长效机制、量化与减持制度优化；偏暖但无即时增量。</div></div></div>
+    <div class="news"><div class="n-no">7</div><div class="n-bd"><div class="n-ti">本周事件密集 <span class="tag t-avoid">变量</span></div><div class="sub">周一 10:00 经济数据、周三凌晨英伟达财报、周二沃什/周四美联储纪要（12 月加息 25bp 定价约 89%）。</div></div></div>
+    <div class="news"><div class="n-no">8</div><div class="n-bd"><div class="n-ti">BLG 夺得 S16 全球总决赛冠军 <span class="tag t-main">利好游戏</span></div><div class="sub">中国战队时隔 5 年夺冠，11/15 凌晨落地，利好游戏/电竞/影游互动及“玄学名字”，兼带赞助商。</div></div></div>
+    <div class="news"><div class="n-no">9</div><div class="n-bd"><div class="n-ti">央行 2000 亿买断式逆回购 <span class="tag t-ok">流动性</span></div><div class="sub">11/16 开展、期限 6 个月，中长期流动性投放，偏暖。</div></div></div>
+    <div class="news"><div class="n-no">10</div><div class="n-bd"><div class="n-ti">中信建投：市场底大概率确认 <span class="tag t-ok">卖方观点</span></div><div class="sub">十月底低点大概率是市场底，11 月是修复起点，但节奏“进二退一”，修复斜率受约束。</div></div></div>
+    <div class="news"><div class="n-no">11</div><div class="n-bd"><div class="n-ti">个股动态 <span class="tag t-no">防雷</span></div><div class="sub">中国稀土、TCL 中环周一复牌；通威 26 亿员工持股。<b class="red">南卫股份 603880 实控人因内幕交易罪被刑拘，列入防雷、不碰。</b></div></div></div>
+  </div>
+
+  <!-- 夜间增量 -->
+  <div class="card">
+    <h2>🌙 夜间增量（11/15 晚 - 11/16 凌晨）</h2>
+    <div class="news"><div class="n-no">12</div><div class="n-bd"><div class="n-ti">霍尔木兹海峡通航协议 <span class="tag t-ok">地缘缓和</span></div><div class="sub">伊朗与沿岸国家达成协议、通航风险下降，油价预期回落，避险情绪退、风险偏好修复；成本端利好航空/机场/物流、化工中下游/化纤/轮胎/造纸。</div></div></div>
+    <div class="news"><div class="n-no">13</div><div class="n-bd"><div class="n-ti">华为云 CloudRobo 具身世界模型今日 14:00 发布 <span class="tag t-watch">机器人催化</span></div><div class="sub">首款昇腾原生具身世界模型 WM1.2。但核心标的亿嘉和已 5 连涨、累涨超 30%，<b class="red">事件落地＝利好兑现风险，只看不动、不追高</b>（见机器人观察卡）。</div></div></div>
+    <div class="news"><div class="n-no">14</div><div class="n-bd"><div class="n-ti">上交所监控高溢价芯片 LOF <span class="tag t-no">监管延续</span></div><div class="sub">本周发监管工作函 17 份、提请内幕交易/异常交易核查 28 单；高位、溢价、海外算力链继续规避，与天普停牌、野人“海外链排雷”一致。</div></div></div>
+    <div class="news"><div class="n-no">15</div><div class="n-bd"><div class="n-ti">19 家药企集中提示“短期业绩影响有限” <span class="tag t-watch">冷静提示</span></div><div class="sub">新医保目录 2027/1/1 才执行，多家公司称短期难有重大影响。医药是长期逻辑，<b style="color:#fbbf24">周一若高开冲太猛反是兑现点，等竞价确认合力，不无脑追。</b></div></div></div>
+    <div class="news"><div class="n-no">16</div><div class="n-bd"><div class="n-ti">今日事件日历 <span class="tag t-avoid">变量</span></div><div class="sub">10:00 国新办发布 10 月经济数据（社零/工业增加值）＋70 城房价；国际第三代半导体论坛（苏州，16-19 日）；美联储 AI 听证会。</div></div></div>
+  </div>
+
+  <!-- 博主方法论对照 -->
+  <div class="card">
+    <h2>🧠 博主方法论对照 · 抓资金、抓情绪怎么落地</h2>
+    <div class="muted" style="margin-bottom:8px">把孙站长（外功）＋野人（内功）与我们 v5.1 对照，吸收的不是观点是执行标准。</div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">抓资金</span><div><b>量能聚焦（孙站长）：</b>现在医药/储能/AI+/游戏＋机器人/航空共 6 个方向，存量资金只够托起 1-2 个主线。9:25 不平均用力，谁竞价爆量、谁抢到量就站谁，其余放弃。</div></div>
+      <div class="it"><span class="lab yes">抓情绪</span><div><b>宽度/高度开关（孙站长）：</b>天普停牌压制连板高度，资金更可能走“宽度”（低位扩散、补涨）。我们低位首板＋启动确认低吸＋挖补涨正合此风格，不打高位。</div></div>
+      <div class="it"><span class="lab yes">弱转强</span><div><b>精确判定（野人）：</b>前日大烂板高换手＋次日竞价爆量高开＝筹码被新主力接走。金新农/华胜天成用此验证，不看封单就追。</div></div>
+      <div class="it"><span class="lab no">不追滞后</span><div><b>资金异动先于消息（野人）：</b>消息是结果不是原因，看量价分时与板块联动，不照着公开消息线性外推。</div></div>
+      <div class="it"><span class="lab no">防雷</span><div><b>中位股吃面＋庄股（野人）：</b>不碰 3-6 板中位接力；无量/量价背离/锁仓/对倒的庄股坚决回避。</div></div>
+      <div class="it"><span class="lab no">事件兑现</span><div><b>机器人即活教材：</b>发布会前核心票已涨 5 天，落地即兑现。凡“事件当天”，先问是不是给散户放鱼骨头，看资金是否真合力、有无做高决心。</div></div>
+    </div>
+  </div>
+
+  <!-- 三情景总纲 -->
+  <div class="card">
+    <h2>🧭 周一三情景 · 方向选择总纲</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">A 修复</span><div>竞价放量、科技回暖、红盘家数多 → <b class="red">弹性优先 AI+/储能/游戏</b>，医药防御或被抽血，做有量能的进攻方向。</div></div>
+      <div class="it"><span class="lab yes">B 偏弱</span><div>指数继续下探、防御占优 → <b class="gold">医药/猪肉延续</b>，看逆势承接、低位首板。</div></div>
+      <div class="it"><span class="lab no">C 扰动</span><div>数据爆冷或外围冲击、竞价无合力 → <b>空仓观望</b>，只记录最强逆势票，不勉强出手。</div></div>
+    </div>
+    <div class="note">盘前倾向（仅假设）：消息最硬、带“全球最低价”标志性事件的<b class="red">医保创新药/CAR-T</b> 最可能率先凝聚合力，储能次之；但任一方向竞价不达标即放弃，不线性外推。</div>
+  </div>
+
+  <!-- 题材一：医药 -->
+  <div class="card theme">
+    <h2>💊 方向一 · 医保创新药 / CAR-T</h2>
+    <div class="logic">逻辑：以价换量、创新药放量，CAR-T 降价进医保打开可及性；属防御属性，弱市更持续、强修复日防冲高回落。</div>
+    <div class="pick"><div class="p-l"><div class="p-n">中源协和 <span class="code">600645</span> <span class="tag t-main">主攻</span></div><div class="p-d">CAR-T + 重组蛋白，题材最正</div></div><div class="p-r"><div class="red">16.77</div><div class="muted">流通78.45亿</div></div></div>
+    <div class="pick"><div class="p-l"><div class="p-n">东诚药业 <span class="code">002675</span> <span class="tag t-b">看A做B</span></div><div class="p-d">核药 + CAR-T，双概念</div></div><div class="p-r"><div class="red">12.74</div><div class="muted">流通94.71亿</div></div></div>
+    <h3>低位补涨池（前排进不去的可换手备选）</h3>
+    <div class="sub">海欣股份 600851（8.46/70.4亿）、国际医学 000516（4.52/99.7亿）、华邦健康 002004（4.56/86.0亿）、九芝堂 000989（8.23/70.4亿）、东北制药 000597（4.28/60.3亿）、南京新百 600682（4.99/58.1亿）。</div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">确认</span><div>板块高开≥5 家、核心高开 3-5%、竞价放量、有中军带队 → 启动确认低吸。</div></div>
+      <div class="it"><span class="lab no">证伪</span><div>仅个别高开、无量、冲高回落破均价 → 不追，防一日游。</div></div>
+    </div>
+    <div class="muted" style="margin-top:7px">100股风险：中源协和约 <b class="gold">50元</b>、东诚约 <b class="gold">38元</b>（−3%口径）。</div>
+  </div>
+
+  <!-- 题材二：储能 -->
+  <div class="card theme store">
+    <h2>🔋 方向二 · 新型储能</h2>
+    <div class="logic">逻辑：“十五五”3 亿千瓦目标 + 市场化转型，利好储能系统/运营；板块此前反复炒，重点看本次持续性与量能。</div>
+    <div class="pick"><div class="p-l"><div class="p-n">林洋能源 <span class="code">601222</span> <span class="tag t-main">主攻</span></div><div class="p-d">储能 + 智能电表，低价易承接</div></div><div class="p-r"><div class="red">5.24</div><div class="muted">总市值106.96亿</div></div></div>
+    <div class="pick"><div class="p-l"><div class="p-n">金开新能 <span class="code">600821</span> <span class="tag t-b">看A做B</span></div><div class="p-d">新能源运营</div></div><div class="p-r"><div class="red">约100.7亿</div><div class="muted">市值口径</div></div></div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">确认</span><div>储能集体高开、林洋高开 3-5% 放量、板块有梯队 → 低吸。</div></div>
+      <div class="it"><span class="lab no">证伪</span><div>高开超 7% 或一字、个股无量 → 不排队，转补涨；南网储能（347亿）、协鑫能科（211亿）超标不碰。</div></div>
+    </div>
+    <div class="muted" style="margin-top:7px">100股风险：林洋约 <b class="gold">16元</b>。</div>
+  </div>
+
+  <!-- 题材三：AI+ -->
+  <div class="card theme ai">
+    <h2>⛏️ 方向三 · AI+ 智慧矿山 / 工业</h2>
+    <div class="logic">逻辑：“险脏累繁难”场景落地、矿山大模型先行；但英伟达换帅 + 周三财报前算力链有扰动，科技方向须更看竞价强度。</div>
+    <div class="pick"><div class="p-l"><div class="p-n">云鼎科技 <span class="code">000409</span> <span class="tag t-main">主攻</span></div><div class="p-d">盘古矿山大模型，小盘弹性</div></div><div class="p-r"><div class="red">8.22</div><div class="muted">流通48.54亿</div></div></div>
+    <div class="pick"><div class="p-l"><div class="p-n">易普力 <span class="code">002096</span> <span class="tag t-b">看A做B</span></div><div class="p-d">民爆 + 矿山智能化</div></div><div class="p-r"><div class="red">8.78</div><div class="muted">流通108.84亿</div></div></div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">确认</span><div>板块发酵、云鼎高开 3-5% 放量、回踩不破均价 → 启动确认。</div></div>
+      <div class="it"><span class="lab no">证伪</span><div>算力链被英伟达消息带崩、板块无梯队 → 关。</div></div>
+    </div>
+    <div class="muted" style="margin-top:7px">100股风险：云鼎约 <b class="gold">25元</b>、易普力约 <b class="gold">26元</b>。</div>
+  </div>
+
+  <!-- 题材四：游戏 -->
+  <div class="card theme">
+    <h2>🎮 方向四 · 游戏 / 电竞（BLG 夺冠）</h2>
+    <div class="logic">逻辑：S16 夺冠事件催化、电竞情绪点燃，兼带影游互动；属事件驱动，重在看竞价资金是否真抢、有无板块梯队，防一日游。</div>
+    <div class="pick"><div class="p-l"><div class="p-n">姚记科技 <span class="code">002605</span> <span class="tag t-main">主攻</span></div><div class="p-d">游戏 + 扑克小游戏，市值小弹性大</div></div><div class="p-r"><div class="red">17.68</div><div class="muted">流通59.84亿</div></div></div>
+    <div class="pick"><div class="p-l"><div class="p-n">游族网络 <span class="code">002174</span> <span class="tag t-b">看A做B</span></div><div class="p-d">游戏研发，低价</div></div><div class="p-r"><div class="red">10.86</div><div class="muted">流通106.35亿</div></div></div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">确认</span><div>游戏集体高开、姚记/游族高开 3-5% 放量、有跟风梯队 → 启动确认低吸。</div></div>
+      <div class="it"><span class="lab no">证伪</span><div>仅高走无量、冲高回落、板块无跟风 → 不追，事件兑现即一日游。</div></div>
+    </div>
+    <div class="muted" style="margin-top:7px">100股风险：姚记约 <b class="gold">53元</b>、游族约 <b class="gold">33元</b>（−3%口径）。</div>
+  </div>
+
+  <!-- 题材五：机器人（观察） -->
+  <div class="card theme ai">
+    <h2>🤖 方向五 · 机器人 / 具身智能（今日事件 · 只看不动）</h2>
+    <div class="logic">催化：华为云 CloudRobo 具身世界模型今日 14:00 发布。但属“事件落地”，核心标的已提前抢跑，符合机构加速出货、放量别上头的兑现特征，本模式不追。</div>
+    <div class="pick"><div class="p-l"><div class="p-n">亿嘉和 <span class="code">603666</span> <span class="tag t-no">高位规避</span></div><div class="p-d">华为 CloudRobo 全球首家深化伙伴，电力巡检机器人</div></div><div class="p-r"><div class="red">32.57</div><div class="muted">市值66.94亿·已5连涨</div></div></div>
+    <div class="ifthen">
+      <div class="it"><span class="lab no">不追</span><div>累涨超 30%、今日发布会兑现，不接高位；软通动力/拓斯达为创业板（301/300）不可买。</div></div>
+      <div class="it"><span class="lab yes">后置机会</span><div>只当情绪温度计：若发布会后板块分歧、资金真做高，再找主板低位可换手补涨，盘前不预设标的。</div></div>
+    </div>
+  </div>
+
+  <!-- 周五先手 -->
+  <div class="card">
+    <h2>👀 周五先手票 · 二板观察（不主动追）</h2>
+    <div class="pick"><div class="p-l"><div class="p-n">金新农 <span class="code">002548</span> <span class="tag t-watch">猪肉</span></div><div class="p-d">首板封单约3156万、换手4.54%，防御</div></div><div class="p-r"><div class="red">3.83</div><div class="muted">流通30.81亿</div></div></div>
+    <div class="pick"><div class="p-l"><div class="p-n">华胜天成 <span class="code">600410</span> <span class="tag t-watch">华为算力</span></div><div class="p-d">封单1.66亿但换手16.32%巨量，二板从严</div></div><div class="p-r"><div class="red">14.30</div><div class="muted">总市值156.8亿</div></div></div>
+    <div class="note">竞价超预期强势且板块有梯队才看；前排进不去就找同板块可换手补涨，不封板不追直线。</div>
+  </div>
+
+  <!-- 高位规避 -->
+  <div class="card">
+    <h2>🚫 高位情绪锚 · 只看不动（不接飞刀）</h2>
+    <div class="sub"><b class="red">天普股份 4 板已停牌核查（周一不在场）</b>；在位高标：东方海洋 17天9板、澳洋健康 12天6板、龙江交通 11天6板、大东方/日出东方（已收监管函）、东方环宇 4 板、惠发食品 3 板。</div>
+    <div class="muted" style="margin-top:6px">天普停牌后，连板最高在位高度实际下移；这些是情绪温度计，用来判断高标是否核按钮、连板生态好坏，本模式不参与高位接力。监管降温下更应聚焦低位首板/补涨。</div>
+  </div>
+
+  <!-- 作战时间轴 -->
+  <div class="card">
+    <h2>⏱️ 周一作战时间轴</h2>
+    <div class="tl">
+      <div class="t-item"><div class="t-t">9:15-9:25 集合竞价</div><div class="t-d">看指数红绿、高开家数、三方向谁放量、中军/龙头、封单厚度。</div></div>
+      <div class="t-item"><div class="t-t">9:25-9:30 定主攻</div><div class="t-d">锁定资金合力方向，不挂单，等开盘启动确认。</div></div>
+      <div class="t-item"><div class="t-t">9:30-9:45 黄金窗口</div><div class="t-d">3-6% 启动确认：放量+板块梯队+回踩不破均价，低吸为主。</div></div>
+      <div class="t-item"><div class="t-t">10:00 国新办经济数据</div><div class="t-d">社零/工业增加值落地前后波动加大，谨慎、不追。</div></div>
+      <div class="t-item"><div class="t-t">14:00 华为云机器人发布会</div><div class="t-d">CloudRobo 落地，核心票已抢跑，防兑现、不追高。</div></div>
+      <div class="t-item"><div class="t-t">午后</div><div class="t-d">不新开非新主线，首板只记录；9:50 后不追高。</div></div>
+    </div>
+  </div>
+
+  <!-- 风控 -->
+  <div class="card">
+    <h2>🛡️ 仓位与风控铁律</h2>
+    <table>
+      <tr><th>标的</th><th>100股成本</th><th>−3%风险</th></tr>
+      <tr><td>中源协和</td><td>1677元</td><td class="gold">50.3元</td></tr>
+      <tr><td>东诚药业</td><td>1274元</td><td class="gold">38.2元</td></tr>
+      <tr><td>林洋能源</td><td>524元</td><td class="gold">15.7元</td></tr>
+      <tr><td>云鼎科技</td><td>822元</td><td class="gold">24.7元</td></tr>
+      <tr><td>易普力</td><td>878元</td><td class="gold">26.3元</td></tr>
+      <tr><td>金新农</td><td>383元</td><td class="gold">11.5元</td></tr>
+      <tr><td>姚记科技</td><td>1768元</td><td class="gold">53.0元</td></tr>
+      <tr><td>游族网络</td><td>1086元</td><td class="gold">32.6元</td></tr>
+    </table>
+    <div class="riskbar" style="margin-top:10px"><i style="width:20%"></i></div>
+    <div class="muted" style="margin-top:6px">单票 100 股、一次一只、永不补仓；−3% 为硬止损目标位（隔夜跳空可能穿透，需结合竞价）；单笔风险 ≤250 元，全部满足。</div>
+  </div>
+
+  <!-- 周内变量 -->
+  <div class="card">
+    <h2>📅 周内变量（if-then，非结论）</h2>
+    <div class="sub">· 周一 10:00 10月经济数据：超预期则顺周期受益，不及则防御占优。<br>· 周三凌晨英伟达财报：决定算力/CPO/AI+ 方向情绪，落地前科技仓位从严。<br>· 周二沃什讲话、周四美联储纪要：12 月加息 25bp 定价约 89%，防鹰派扰动。<br>· 北交所开市五周年、APEC 深圳倡议。</div>
+  </div>
+
+  <div class="disc">仅为投研方法与信息整理，不构成任何投资建议；市场有风险，据此操作盈亏自负。<br>价位/市值为 11-13 收盘静态值，周一 9:25 竞价以实时数据为准。</div>
+
+</div>
+</body>
+</html>

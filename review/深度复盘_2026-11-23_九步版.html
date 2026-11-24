@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11/23 九步深度复盘</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0e14; color:#e6e9ef; font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif; line-height:1.5; padding:12px; }
+  .wrap { max-width:420px; margin:0 auto; }
+  .card { background:#151a23; border:1px solid #232a38; border-radius:14px; padding:14px; margin-bottom:11px; }
+  .card h2 { font-size:14.5px; color:#38bdf8; margin-bottom:10px; }
+  .muted { color:#8b98ad; font-size:12px; }
+  .hero { background:linear-gradient(135deg,#0f2027,#151a23); border:1px solid #16384a; }
+  .hero .kicker { font-size:11.5px; color:#38bdf8; letter-spacing:1px; font-weight:600; }
+  .hero .title { font-size:20px; font-weight:800; color:#f1f5fb; margin:4px 0 2px; }
+  .ver { display:inline-block; margin-top:8px; font-size:11px; color:#fbbf24; background:#2a2113; border:1px solid #4a3a17; padding:2px 8px; border-radius:6px; font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:11.5px; }
+  th,td { padding:6px 4px; text-align:left; border-bottom:1px solid #232a38; vertical-align:top; }
+  th { color:#38bdf8; font-weight:600; font-size:10.5px; }
+  tr:last-child td { border-bottom:none; }
+  .red { color:#ff6b6b; font-weight:700; }
+  .grn { color:#34d399; font-weight:700; }
+  .gold { color:#fbbf24; font-weight:700; }
+  .cyn { color:#38bdf8; font-weight:700; }
+  .code { color:#8b98ad; font-size:10.5px; }
+  .step { display:inline-block; background:#0c2e3d; color:#38bdf8; font-size:10px; font-weight:800; padding:1px 7px; border-radius:5px; margin-right:6px; }
+  .ifthen .it { display:flex; gap:7px; font-size:12px; padding:5px 0; align-items:flex-start; }
+  .ifthen .lab { flex:0 0 auto; font-weight:700; font-size:10px; padding:1px 6px; border-radius:5px; margin-top:1px; }
+  .lab.yes { background:#163524; color:#34d399; }
+  .lab.no { background:#3b1d24; color:#f87171; }
+  .lab.mid { background:#3d2f16; color:#fbbf24; }
+  .num { display:flex; gap:6px; }
+  .num .n { flex:1; background:#11151d; border:1px solid #232a38; border-radius:9px; padding:7px 4px; text-align:center; }
+  .num .n .v { font-size:14px; font-weight:800; display:block; }
+  .num .n .l { font-size:9.5px; color:#8b98ad; margin-top:2px; display:block; }
+  .tl { position:relative; padding-left:16px; }
+  .tl::before { content:""; position:absolute; left:4px; top:5px; bottom:5px; width:2px; background:#232a38; }
+  .tl .t-item { position:relative; padding:6px 0; font-size:12.3px; }
+  .tl .t-item::before { content:""; position:absolute; left:-16px; top:11px; width:9px; height:9px; border-radius:50%; background:#38bdf8; border:2px solid #0b0e14; }
+  .tl .t-item .t-t { font-weight:700; color:#cbd5e3; font-size:12px; }
+  .tl .t-item .t-d { color:#9fb0c8; font-size:12px; }
+  .lead { font-size:12.6px; background:#11151d; border-left:3px solid #38bdf8; padding:9px 11px; border-radius:0 8px 8px 0; }
+  ul.tick { list-style:none; }
+  ul.tick li { font-size:12px; padding:4px 0 4px 16px; position:relative; color:#9fb0c8; }
+  ul.tick li::before { content:"▸"; position:absolute; left:2px; color:#38bdf8; }
+  .disc { font-size:11px; color:#6b7689; text-align:center; margin:6px 0 10px; line-height:1.6; }
+  .daytag { font-size:10px; font-weight:700; padding:1px 6px; border-radius:5px; }
+  .d20 { background:#1d2b3a; color:#7dd3fc; }
+  .d23 { background:#163524; color:#86efac; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <div class="kicker">A 股 · 短线跟随 · 九步深度复盘（v5.1）</div>
+    <div class="title">11/23 周一 · 深V奇迹日</div>
+    <div class="muted">更新于 11-23 18:30 · 预演 11-24 周二</div>
+    <div class="ver">稳市三招＋机器人主线共振，情绪从极端冰点直接反转；高标集体天量分歧，明天看分化</div>
+    <div class="ver" style="color:#34d399;background:#10241c;border-color:#1c4a34">体系已更新：取消“一次一只”＋固定100股，改为多只并存（≤3只、风险和≤500）、按风险动态定股数（9.2）</div>
+  </div>
+
+  <!-- 1 消息 -->
+  <div class="card">
+    <h2><span class="step">1</span>消息扫描：稳市组合拳＋机器人硬催化</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">稳市</span><div>11-22 三招：①<b>融资保证金100%→80%</b>（11-30生效，理论释放约4000亿，本周资金未实际进场）②创业板做市商征求意见 ③降费让利27.58亿。逆周期信号明确，直接提振风险偏好。</div></div>
+      <div class="it"><span class="lab yes">机器人</span><div>四部门《“一老一小”方案》鼓励养老AI体/服务机器人/外骨骼；工信部＋农业农村部55个农业机器人场景；5项人形机器人标准已发布；马斯克称Optimus 12-18个月可做多步家务。</div></div>
+      <div class="it"><span class="lab yes">外围</span><div>美股期货反弹（标普+2%、纳指100+2.9%，科技超卖）；美财长贝森特对黄仁勋重返英伟达口风转暖。</div></div>
+      <div class="it"><span class="lab no">盘后</span><div><b>盛剑科技收上交所监管工作函</b>；克来机电澄清“不涉及人形机器人”；高位股密集异动公告；回购增持潮（中国能建、泰格、圣泉等）。</div></div>
+    </div>
+  </div>
+
+  <!-- 2 数据 -->
+  <div class="card">
+    <h2><span class="step">2</span>全市场数据：情绪一日反转</h2>
+    <table>
+      <tr><th>指标</th><th><span class="daytag d20">11-20</span></th><th><span class="daytag d23">11-23</span></th></tr>
+      <tr><td>涨停</td><td>28</td><td class="grn">146</td></tr>
+      <tr><td>炸板 / 跌停</td><td>7 / 58</td><td class="grn">24 / 3</td></tr>
+      <tr><td>封板率</td><td>80.0%</td><td class="grn">85.9%</td></tr>
+      <tr><td>成交额</td><td>1.42万亿</td><td class="grn">1.55万亿（放量1307亿）</td></tr>
+    </table>
+    <div style="height:8px"></div>
+    <div class="num">
+      <div class="n"><span class="v grn">57.1%</span><span class="l">晋级率</span></div>
+      <div class="n"><span class="v grn">52.0%</span><span class="l">首板晋级率</span></div>
+      <div class="n"><span class="v grn">+7.69%</span><span class="l">上周五涨停今日均涨</span></div>
+    </div>
+    <div class="muted" style="margin-top:9px">上周五28只涨停今日16只再涨停，红盘率92.9%、中位+9.99%。上证低开3503、盘中<b class="red">下杀3476</b>破3500后V型反转，收3538.95（+0.15%）；创业板+3.08%、北证50+4.67%，<b>上证50−0.86%权重弱、小盘成长强</b>。</div>
+  </div>
+
+  <!-- 3 五维 -->
+  <div class="card">
+    <h2><span class="step">3</span>五维框架（齐才出结论）</h2>
+    <table>
+      <tr><th>维度</th><th>判定</th></tr>
+      <tr><td><b>量能</b></td><td class="grn">1.55万亿放量1307亿，有增量回补，非存量缩量反抽</td></tr>
+      <tr><td><b>情绪节奏</b></td><td class="grn">146涨停、跌停3、封板率85.9%，由退潮直接转修复/反转；但一日涨太满，明天分化压力大</td></tr>
+      <tr><td><b>资金流向</b></td><td>ETF越跌越买（上周五股票ETF单日净流入919亿），小盘成长主攻，机器人/算力领涨，权重收缩</td></tr>
+      <tr><td><b>筹码</b></td><td class="red">高标集体天量分歧：真视通炸6换手60.4、中京炸6换手30.3，高位筹码剧烈松动</td></tr>
+      <tr><td><b>消息</b></td><td>政策＋产业共振，但4000亿11-30才落地，当前是预期驱动</td></tr>
+    </table>
+    <div class="lead" style="margin-top:9px">这是<b class="grn">政策底＋情绪底共振的修复日</b>，不是反抽：有放量、有主线（机器人）、有硬催化。但“一天涨完几天的量”，明天大概率从普涨转向分化淘汰。</div>
+  </div>
+
+  <!-- 4 龙头 -->
+  <div class="card">
+    <h2><span class="step">4</span>情绪龙头：高标天量分歧，新主线在机器人</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab no">真视通</span><div><b>5板（炸6、换手60.4天量、封流1.49）</b>，盘中从涨停砸到近平盘（15.79）再回封，闽发模式走到高位剧烈分歧，见顶信号累积，只作情绪锚。</div></div>
+      <div class="it"><span class="lab no">盛剑</span><div>5板0炸但收<b>监管工作函</b>，且业绩亏损，明天承压。</div></div>
+      <div class="it"><span class="lab mid">中京</span><div>3板（炸6、换手30.3），分歧巨大，明天看能否弱转强。</div></div>
+      <div class="it"><span class="lab yes">新主线</span><div><b>机器人概念67只涨停、人形机器人51只</b>，华为机器人指数+10.98%，政策+标准+产业三驱动，是当前最成体系的方向。</div></div>
+    </div>
+  </div>
+
+  <!-- 5 预期差 -->
+  <div class="card">
+    <h2><span class="step">5</span>预期差：恐慌盘 vs 真实承接</h2>
+    <div class="muted" style="margin-bottom:6px"><b class="red">上周五共识</b>：近5000只下跌、六连冰、外部崩盘、多看少动。</div>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">真①</span><div>资金没离场，ETF在3500下方越跌越买，今天低开没踩踏反而被回补，3476点承接力被验证。</div></div>
+      <div class="it"><span class="lab yes">真②</span><div>机器人有真实产业逻辑（标准落地＋量产临近），不是纯情绪炒作，叙事可延续。</div></div>
+      <div class="it"><span class="lab no">风险</span><div>高标集体天量＋监管降温，若明天高标补跌，会压制连板情绪；普涨后追高性价比低，容易接在分化前。</div></div>
+    </div>
+  </div>
+
+  <!-- 盘前验证 -->
+  <div class="card">
+    <h2><span class="step">核</span>盘前判断验证：今天为什么空仓</h2>
+    <div class="ifthen">
+      <div class="it"><span class="lab yes">买点1</span><div>首选澳弘（低开−2.5%、收+3.7%未封板）、备选骏亚（低开−5.2%、未封板），均不满足“高开2-5%＋封板”，<b>无信号，正确不打</b>。</div></div>
+      <div class="it"><span class="lab yes">买点4</span><div>中京虽回封3板，但<b>炸6次（≥3次）</b>，不符“健康分歧”标准，正确放弃。</div></div>
+      <div class="it"><span class="lab mid">复盘</span><div>今天146涨停、百股大涨，空仓看似错过，但盘前静态选的标的恰恰没走出来——印证<b>总纲第7条</b>：反转日方向要跟随盘中资金合力，不提前钉死。纪律没破，比硬凑交易更重要。</div></div>
+    </div>
+  </div>
+
+  <!-- 实盘交易复盘 -->
+  <div class="card">
+    <h2><span class="step">实</span>今日实盘交易复盘（3 笔）</h2>
+    <div class="num">
+      <div class="n"><span class="v grn">+103</span><span class="l">襄阳浮盈(100股)</span></div>
+      <div class="n"><span class="v red">−40</span><span class="l">文投浮亏(1000股)</span></div>
+      <div class="n"><span class="v" style="color:#cbd5e3">4655</span><span class="l">总占用(35.8%)</span></div>
+    </div>
+    <div class="ifthen" style="margin-top:9px">
+      <div class="it"><span class="lab yes">襄阳</span><div><b>质量最高的一笔</b>：9:53在17.65买（涨幅3.95%，正处3-6%启动区），贴机器人主线，当天0炸封板。<b>不足</b>：封流0.66偏弱、换手29.9过高、连续亏损，封板质量一般；须确认当时是否真满足5.4放量站均价，否则是裸半路。</div></div>
+      <div class="it"><span class="lab mid">西陇</span><div>7.99卖出后涨停8.50，看似卖飞，但西陇是<b>硬红线票（虚增收入、账户冻结）</b>，卖出污点票纪律正确，属结果偏误；真正问题是为何会买入它。</div></div>
+      <div class="it"><span class="lab no">文投</span><div><b>问题最多</b>：14:01午后追入（违反13点后不追）、未封板纯“猜明天”、15天10板高位且有<b>*ST风险</b>（AI漫剧收入仅2.57%）、买在高点2.97附近。1000股按动态规则风险仅90元、股数合规，问题在买点与标的而非仓位。</div></div>
+    </div>
+    <div class="lead" style="margin-top:9px; border-left-color:#fbbf24">
+      <b class="gold">改进</b>：①低吸前先确认板块梯队＋资金净流入，把“我觉得”换成客观条件；②防雷前置到买入前，硬红线/*ST票不进；③尾盘不赌妖股，试错只能走7.7通道（风险≤200、每周≤2次）；④文投止损2.80，明天反抽不过2.89/均价应认错，不补仓。
+    </div>
+  </div>
+
+  <!-- PK 候选 -->
+  <div class="card">
+    <h2><span class="step">PK</span>明天一进二候选（均已防雷）</h2>
+    <table>
+      <tr><th>标的</th><th>封流%</th><th>炸</th><th>换手</th><th>方向</th><th>定性</th></tr>
+      <tr><td><b>华东重机</b><br><span class="code">002685</span><br>收8.14</td><td class="gold">3.07</td><td>1</td><td>20.2</td><td>港机＋GPU芯片</td><td class="gold">封流最强/干净</td></tr>
+      <tr><td><b>芯瑞达</b><br><span class="code">002983</span><br>收24.98</td><td class="gold">2.27</td><td class="grn">0</td><td>5.5</td><td>AI光学/车载</td><td class="gold">0炸/干净</td></tr>
+      <tr><td><b>宁波东力</b><br><span class="code">002164</span><br>收17.94</td><td>2.07</td><td>1</td><td>3.7</td><td>机器人减速器</td><td style="color:#fbbf24">贴主线/有前科</td></tr>
+    </table>
+    <div class="ifthen" style="margin-top:8px">
+      <div class="it"><span class="lab yes">华东</span><div>2026-04公告五年零处罚；Q1营收+156%、净利+57%；GPU（锐信图芯）概念。<b>官方明确不涉及机器人</b>，属老妖游资票，波动大。</div></div>
+      <div class="it"><span class="lab yes">芯瑞达</span><div>0炸、封流实、小盘32亿，AI光学可蹭机器人视觉＋算力，无负面。</div></div>
+      <div class="it"><span class="lab no">宁波</span><div>子公司谐波/行星减速器＋机器人关节模组，最贴主线；但<b>2017年报曾造假、2021年被处罚（已过5年，近五年干净）</b>，介意历史者放弃。</div></div>
+      <div class="it"><span class="lab no">规避</span><div>亿嘉和（警示函＋通报批评）、青山（内幕交易瑕疵）、百洋（非主线波动剧烈）、西陇（造假硬红线）、鼎龙（流通11.8）。</div></div>
+    </div>
+  </div>
+
+  <!-- 6 看A做B -->
+  <div class="card">
+    <h2><span class="step">6</span>看 A 做 B（B 过三关＋防雷）</h2>
+    <ul class="tick">
+      <li><b>板块内</b>：高标真视通/盛剑高位分歧不追 → 机器人/算力低位首板，封单实、可换手的合规票。</li>
+      <li><b>板块间</b>：权重（上证50）收缩、小盘成长主攻 → 机器人、AI光学、算力硬件。</li>
+      <li><b>三关＋防雷</b>：三只均主板、价≤48、流通20-200亿，无ST、无近期立案，净资产正。</li>
+    </ul>
+    <div class="muted" style="margin-top:7px">明天不预设方向，候选池摆在这，竞价＋盘中谁放量、封单转厚、属当前最强方向就打谁，一次一只。</div>
+  </div>
+
+  <!-- 7 剧本 -->
+  <div class="card">
+    <h2><span class="step">7</span>明日剧本写死（11-24 周二 · 零临时决策）</h2>
+    <div class="tl">
+      <div class="t-item"><div class="t-t">9:25 竞价筛</div><div class="t-d">看真视通/盛剑是否补跌（情绪锚）、机器人梯队是否延续、三只候选高开幅度（2-5%为佳）、竞价量能、指数能否站稳3500。</div></div>
+      <div class="t-item"><div class="t-t">9:30-9:45 打板窗口</div><div class="t-d">候选高开2-5%放量上板、封单实、机器人/科技梯队配合则打；午后不做。</div></div>
+    </div>
+    <div class="ifthen" style="margin-top:8px">
+      <div class="it"><span class="lab yes">强</span><div>高标不补跌＋机器人继续扩散、指数站稳：打封单最实的一只，股数按 9.2 动态定。</div></div>
+      <div class="it"><span class="lab mid">震荡</span><div>高标分歧但低位有承接、个股放量封板：只打确认最实的一只，否则空仓。</div></div>
+      <div class="it"><span class="lab no">弱</span><div>高标补跌带崩、跌停放大、指数跌破3500无承接：<b>空仓等企稳，不接飞刀</b>。</div></div>
+    </div>
+  </div>
+
+  <!-- 8 信号卡 -->
+  <div class="card">
+    <h2><span class="step">8</span>可挂单信号卡</h2>
+    <table>
+      <tr><th>标的</th><th>高开2-5%买点</th><th>止损(−3%)</th><th>参考风险</th></tr>
+      <tr><td><b>华东重机</b><br><span class="code">002685</span></td><td>8.30–8.55</td><td class="grn">7.90</td><td class="gold">24元</td></tr>
+      <tr><td><b>芯瑞达</b><br><span class="code">002983</span></td><td>25.48–26.23</td><td class="grn">24.23</td><td class="gold">75元</td></tr>
+      <tr><td><b>宁波东力</b><br><span class="code">002164</span></td><td>18.30–18.84</td><td class="grn">17.40</td><td class="gold">54元</td></tr>
+    </table>
+    <div class="muted" style="margin-top:8px">按风险动态定股数、不补仓；高开2-5%须放量＋回踩不破均价；一字/&gt;8%不追；硬止损−3%，单笔风险均≤250。买点4（二进三）盘中动态看，只做首次开板、均价上方、放量、回封转厚且炸&lt;3次。</div>
+  </div>
+
+  <!-- 9 铁律 -->
+  <div class="card">
+    <h2><span class="step">9</span>铁律校验＋漏洞审计</h2>
+    <ul class="tick">
+      <li>不以今天定义明天——修复只给赔率，能否延续待竞价确认。</li>
+      <li>全景扫描后聚焦，不追真视通/盛剑天量高标，不被单一板块锚定。</li>
+      <li>普涨次日不追高，分化期只打实封＋健康换手，宁缺毋滥。</li>
+      <li>风险≤250、动态定股数、不补仓、硬止损−3%。</li>
+    </ul>
+    <div class="lead" style="margin-top:9px; border-left-color:#fbbf24">
+      <b class="gold">催化日历</b>：11-26（周三）高交会（算力/储能/机器人）；11-30（下周一）融资保证金正式生效；机器人政策持续发酵。<b>关注点</b>：高标补跌风险与监管降温（盛剑工作函）是否扩散，是明天情绪的最大变量。
+    </div>
+  </div>
+
+  <div class="disc">仅为投研方法与信息整理，不构成投资建议；涨停/跌停各口径略有差异已标注；逐笔封单以券商 APP 为准，盘中以实时资金与承接确认，据此操作盈亏自负。</div>
+
+</div>
+</body>
+</html>
